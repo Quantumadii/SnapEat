@@ -1,5 +1,8 @@
 package com.snapeat.service;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -8,12 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.snapeat.dto.AuthResponse;
+import com.snapeat.dto.ChangePasswordRequest;
+import com.snapeat.dto.ForgotPasswordRequest;
 import com.snapeat.dto.LoginRequest;
 import com.snapeat.dto.RegisterRequest;
+import com.snapeat.dto.ResetPasswordRequest;
 import com.snapeat.entity.Restaurant;
 import com.snapeat.entity.User;
 import com.snapeat.enums.Role;
 import com.snapeat.exception.DuplicateResourceException;
+import com.snapeat.exception.InvalidTokenException;
 import com.snapeat.exception.ResourceNotFoundException;
 import com.snapeat.repository.RestaurantRepository;
 import com.snapeat.repository.UserRepository;
@@ -105,4 +112,39 @@ public class AuthService {
                 .message("Login successful")
                 .build();
     }
+	
+	public void forgotPassword(String email) {
+		User user = userRepo.findByEmail(email)
+				.orElseThrow(()-> new ResourceNotFoundException("No account found with email: "+email));
+		String token = UUID.randomUUID().toString();
+		user.setResetToken(token);
+		user.setResetTokenExpiry(LocalDateTime.now().plusHours(1));
+		userRepo.save(user);
+	}
+	
+	public void resetPassword(ResetPasswordRequest req) {
+		User user = userRepo.findByResetToken(req.getToken())
+                .orElseThrow(() -> new InvalidTokenException("Invalid or expired password reset token"));
+
+        if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new InvalidTokenException("Password reset token has expired. Please request a new one.");
+        }
+        user.setPassword(passwordEncoder.encode(req.getNewPassword()));
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+        userRepo.save(user);
+	}
+	
+	public void changePassword(String email, ChangePasswordRequest req) {
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+
+        if (!passwordEncoder.matches(req.getCurrentPassword(), user.getPassword())) {
+            throw new InvalidTokenException("Current password is incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(req.getNewPassword()));
+        userRepo.save(user);
+    }
 }
+

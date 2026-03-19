@@ -1,6 +1,7 @@
 package com.snapeat.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "app")
 @Getter
 @Setter
+@Component
 public class AppProperties {
 	private String name = "SnapEat";
     private String frontendUrl = "http://localhost:5173";
