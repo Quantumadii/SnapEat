@@ -1,0 +1,59 @@
+# Maven 
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.utils_backup
+pom.xml.vsnapshot_backup
+release.properties
+dependency-reduced-pom.xml
+build.log
+修复-mvn-wrapper.jar
+
+# --- Compiled class files ---
+*.class
+*.log
+*.ctxt
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# --- Eclipse ---
+.metadata/
+.settings/
+.project
+.classpath
+.factorypath
+bin/
+*.launch
+*.tmp
+*.bak
+*.swp
+*~
+.sts4-cache/
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# --- Visual Studio Code ---
+.vscode/
+
+# --- Operating System ---
+DS_Store
+Thumbs.db
+
+# --- Spring Boot ---
+*.properties.bak
+*.yml.bak
+HELP.md
+active.profile
+
+# --- Logging ---
+logs/
+*.log
