@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:replace="~{email/layout :: layout(~{::section})}">
+
+        <section>
+            <h2 style="margin-top:0; color:#2d3436; font-size:22px;">Order Update 📦</h2>
+            
+            <p>Hi <strong th:text="${fullName}">User</strong>,</p>
+            <p>There is an update regarding your Order <strong>#[[${orderId}]]</strong>:</p>
+            
+            <div style="text-align:center; margin:30px 0; padding:25px; background:#fcfcfc; border-radius:16px; border:1px solid #eee;">
+                <span th:style="'display:inline-block; padding:6px 16px; border-radius:50px; color:#fff; font-weight:bold; font-size:12px; text-transform:uppercase; letter-spacing:1px; background:' + ${statusColor} + ';'"
+                      th:text="${status}">
+                    STATUS
+                </span>
+                
+                <p style="margin:20px 0 0; font-size:18px; color:#2d3436; font-weight:600; line-height:1.4;" 
+                   th:text="${statusMsg}">
+                    Status message goes here.
+                </p>
+            </div>
+
+            <p style="color:#636e72; font-size:14px; text-align:center;">
+                Click the button below to see the real-time location or details of your order.
+            </p>
+
+            <div style="text-align:center; margin-top:25px;">
+                <a th:href="${trackUrl}" 
+                   style="display:inline-block; border:2px solid #ff6b35; color:#ff6b35; padding:12px 28px; text-decoration:none; border-radius:10px; font-weight:bold;">
+                    View Order Details
+                </a>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>

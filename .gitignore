@@ -54,6 +54,11 @@ Thumbs.db
 HELP.md
 active.profile
 
+# --- Spring Secrets ---
+application.properties
+.env
+.env.*
+
 # --- Logging ---
 logs/
 *.log
