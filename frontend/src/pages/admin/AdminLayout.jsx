@@ -54,12 +54,11 @@ export default function AdminLayout({ children, title }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Desktop sidebar */}
+      
       <div className="admin-sidebar hidden lg:flex flex-col">
         <SidebarContent />
       </div>
 
-      {/* Mobile overlay */}
       {sidebarOpen && (
         <>
           <div className="fixed inset-0 bg-black bg-opacity-50 lg:hidden z-40" onClick={() => setSidebarOpen(false)} />
@@ -69,7 +68,6 @@ export default function AdminLayout({ children, title }) {
         </>
       )}
 
-      {/* Main content */}
       <div className="admin-content">
         <header className="bg-white border-b border-gray-100 px-6 py-3 flex items-center justify-between sticky top-0 z-20">
           <div className="flex items-center gap-3">

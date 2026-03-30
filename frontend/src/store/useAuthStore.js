@@ -11,6 +11,7 @@ const useAuthStore = create((set) => ({
   },
 
   logout: () => {
+    sessionStorage.setItem('postLogoutRedirect', '1')
     localStorage.clear()
     set({ user: null, token: null })
   },

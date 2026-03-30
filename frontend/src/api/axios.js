@@ -12,8 +12,10 @@ api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
+      const redirectToHomeAfterLogout = sessionStorage.getItem('postLogoutRedirect') === '1'
+      sessionStorage.removeItem('postLogoutRedirect')
       localStorage.clear()
-      window.location.href = '/login'
+      window.location.href = redirectToHomeAfterLogout ? '/' : '/login'
     }
     return Promise.reject(err)
   }

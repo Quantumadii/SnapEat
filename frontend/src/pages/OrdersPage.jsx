@@ -28,7 +28,7 @@ export default function OrdersPage() {
   const [orders, setOrders]   = useState([])
   const [loading, setLoading] = useState(true)
   const [ratingOrder, setRatingOrder] = useState(null)
-  const [ratingForm, setRatingForm] = useState({ restaurantId: '', score: 5, comment: '' })
+  const [ratingForm, setRatingForm] = useState({ menuItemId: '', score: 5, comment: '' })
   const [submittingRating, setSubmittingRating] = useState(false)
 
   const fetchOrders = () => {
@@ -51,33 +51,33 @@ export default function OrdersPage() {
   }
 
   const openRating = (order) => {
-    const resolvedRestaurantId = order.restaurantId ?? order.restaurant?.id ?? ''
+    const resolvedMenuItemId = order.orderItems?.[0]?.menuItemId ?? ''
     setRatingOrder(order)
-    setRatingForm({ restaurantId: resolvedRestaurantId, score: 5, comment: '' })
+    setRatingForm({ menuItemId: resolvedMenuItemId, score: 5, comment: '' })
   }
 
   const submitRating = async (e) => {
     e.preventDefault()
     const resolvedUserId = user?.userId ?? user?.id ?? null
-    const resolvedRestaurantId = Number(ratingForm.restaurantId)
+    const resolvedMenuItemId = Number(ratingForm.menuItemId)
 
     if (!resolvedUserId) {
       toast.error('Please login again to submit your rating')
       return
     }
-    if (!ratingForm.restaurantId) {
-      toast.error('Restaurant not found for this order')
+    if (!ratingForm.menuItemId) {
+      toast.error('Menu item not found for this order')
       return
     }
-    if (!Number.isFinite(resolvedRestaurantId) || resolvedRestaurantId <= 0) {
-      toast.error('Invalid restaurant selected for rating')
+    if (!Number.isFinite(resolvedMenuItemId) || resolvedMenuItemId <= 0) {
+      toast.error('Invalid menu item selected for rating')
       return
     }
     setSubmittingRating(true)
     try {
       await ratingAPI.add({
         userId: resolvedUserId,
-        restaurantId: resolvedRestaurantId,
+        menuItemId: resolvedMenuItemId,
         score: Number(ratingForm.score),
         comment: ratingForm.comment.trim(),
       })

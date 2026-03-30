@@ -67,7 +67,7 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Recent Orders */}
+      
       <div className="snap-card p-5">
         <div className="flex items-center justify-between mb-4">
           <h6 className="font-bold mb-0">Recent Orders</h6>
