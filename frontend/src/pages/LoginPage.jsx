@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { authAPI } from '../api'
+import { apiErrorMessage, authAPI } from '../api'
 import useAuthStore from '../store/useAuthStore'
 
 export default function LoginPage() {
@@ -23,7 +23,7 @@ export default function LoginPage() {
       toast.success(`Welcome back, ${user.fullName?.split(' ')[0]}!`)
       navigate(user.role === 'ADMIN' ? '/admin/dashboard' : '/')
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Login failed')
+      toast.error(apiErrorMessage(err, 'Invalid credentials'))
     } finally { setLoading(false) }
   }
 
@@ -54,7 +54,7 @@ export default function LoginPage() {
               <div className="input-wrap">
                 <span className="input-icon"><i className="bi bi-lock" /></span>
                 <input name="password" type={showPass ? 'text' : 'password'} className="form-input"
-                  value={form.password} onChange={handle} required placeholder="••••••••" />
+                  value={form.password} onChange={handle} required placeholder="Enter your password" />
                 <button type="button" className="input-icon-end" onClick={() => setShowPass(!showPass)}>
                   <i className={`bi ${showPass ? 'bi-eye-slash' : 'bi-eye'}`} />
                 </button>

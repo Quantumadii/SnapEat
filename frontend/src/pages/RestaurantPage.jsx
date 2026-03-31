@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { restaurantAPI, menuAPI } from '../api'
+import { apiErrorMessage, restaurantAPI, menuAPI } from '../api'
 import useCartStore from '../store/useCartStore'
 import useAuthStore from '../store/useAuthStore'
 
@@ -28,17 +28,21 @@ export default function RestaurantPage() {
   const [vegOnly, setVegOnly]       = useState(false)
   const [loading, setLoading]       = useState(true)
 
+  const resolvedRating = Number(restaurant?.avgRating ?? restaurant?.averageRating)
+  const hasRating = Number.isFinite(resolvedRating) && resolvedRating > 0
+  const ratingLabel = hasRating ? resolvedRating.toFixed(1) : 'New'
+
   useEffect(() => {
     Promise.all([restaurantAPI.getById(id), menuAPI.getMenu(id)])
       .then(([rRes, mRes]) => { setRestaurant(rRes.data.data); setMenu(mRes.data.data || []) })
-      .catch(() => toast.error('Failed to load menu'))
+      .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load menu')))
       .finally(() => setLoading(false))
   }, [id])
 
   useEffect(() => {
     menuAPI.getMenu(id, activeCategory)
       .then((r) => setMenu(r.data.data || []))
-      .catch(() => {})
+      .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load menu')))
   }, [activeCategory, id])
 
   const filtered  = vegOnly ? menu.filter((m) => m.veg) : menu
@@ -80,6 +84,7 @@ export default function RestaurantPage() {
             <p className="mb-3 max-w-xl" style={{ color: 'rgba(255,255,255,0.75)' }}>{restaurant.description}</p>
           )}
           <div className="flex flex-wrap gap-4 text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+            <span><i className="bi bi-star-fill text-brand mr-1" />{ratingLabel}</span>
             {(restaurant?.area || restaurant?.city) && (
               <span><i className="bi bi-geo-alt text-brand mr-1" />{[restaurant.area, restaurant.city].filter(Boolean).join(', ')}</span>
             )}
@@ -103,7 +108,7 @@ export default function RestaurantPage() {
                 {cat.label}
               </button>
             ))}
-            <div className="ml-auto pl-2 border-l flex items-center flex-shrink-0">
+            <div className="ml-auto pl-2 border-l flex items-center shrink-0">
               <button onClick={() => setVegOnly(!vegOnly)}
                 className={`cat-pill flex items-center gap-1 ${vegOnly ? 'active' : ''}`}>
                 <i className="bi bi-leaf" /> Veg Only

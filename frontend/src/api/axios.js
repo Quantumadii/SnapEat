@@ -12,6 +12,13 @@ api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
+      const requestUrl = String(err.config?.url || '')
+      const isAuthLoginRequest = requestUrl.includes('/auth/login')
+
+      if (isAuthLoginRequest) {
+        return Promise.reject(err)
+      }
+
       const redirectToHomeAfterLogout = sessionStorage.getItem('postLogoutRedirect') === '1'
       sessionStorage.removeItem('postLogoutRedirect')
       localStorage.clear()

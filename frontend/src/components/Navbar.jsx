@@ -77,9 +77,11 @@ export default function Navbar() {
                     </Link>
                   </>
                 )}
-                <button onClick={handleLogout} className="btn-outline-brand text-sm py-1.5 px-3 text-red-500 border-red-400 hover:bg-red-500">
-                  <i className="bi bi-box-arrow-right" />
-                </button>
+                {user.role === 'ADMIN' && (
+                  <button onClick={handleLogout} className="btn-outline-brand text-sm py-1.5 px-3 text-red-500 border-red-400 hover:bg-red-500">
+                    <i className="bi bi-box-arrow-right" />
+                  </button>
+                )}
               </>
             ) : (
               <>

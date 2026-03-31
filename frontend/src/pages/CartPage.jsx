@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import useCartStore from '../store/useCartStore'
-import { orderAPI, paymentAPI } from '../api'
+import { apiErrorMessage, orderAPI, paymentAPI } from '../api'
 
 export default function CartPage() {
   const navigate = useNavigate()
@@ -81,7 +81,7 @@ export default function CartPage() {
       toast.success('Order placed successfully! 🎉')
       navigate('/orders')
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message || 'Failed to place order')
+      toast.error(apiErrorMessage(err, err.message || 'Failed to place order'))
     } finally { setLoading(false) }
   }
 

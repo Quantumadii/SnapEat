@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { authAPI } from '../api'
+import { apiErrorMessage, authAPI } from '../api'
 
 export function ForgotPage() {
   const [email, setEmail]   = useState('')
@@ -16,7 +16,7 @@ export function ForgotPage() {
       setSent(true)
       toast.success('Reset link sent!')
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to send reset link')
+      toast.error(apiErrorMessage(err, 'Failed to send reset link'))
     } finally { setLoading(false) }
   }
 
@@ -70,7 +70,7 @@ export function ResetPage() {
       toast.success('Password reset! Please sign in.')
       navigate('/login')
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Reset failed. Link may have expired.')
+      toast.error(apiErrorMessage(err, 'Reset failed. Link may have expired.'))
     } finally { setLoading(false) }
   }
 

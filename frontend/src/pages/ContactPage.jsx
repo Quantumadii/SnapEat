@@ -2,7 +2,7 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { contactAPI } from '../api'
+import { apiErrorMessage, contactAPI } from '../api'
 
 const CONTACT_INFO = [
   { icon: 'bi-envelope-fill', label: 'Email', value: 'snapeatroos@gmail.com', href: 'mailto:snapeatroos@gmail.com' },
@@ -26,7 +26,7 @@ export default function ContactPage() {
       setSent(true)
       setForm({ name: '', email: '', subject: '', message: '' })
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to send message')
+      toast.error(apiErrorMessage(err, 'Failed to send message'))
     } finally {
       setSending(false)
     }

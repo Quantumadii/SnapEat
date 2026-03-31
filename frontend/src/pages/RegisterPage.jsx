@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { authAPI } from '../api'
+import { apiErrorMessage, authAPI } from '../api'
 import useAuthStore from '../store/useAuthStore'
 
 export default function RegisterPage() {
@@ -68,7 +68,7 @@ export default function RegisterPage() {
       setStep('OTP')
       toast.success('OTP sent to your email')
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Registration failed')
+      toast.error(apiErrorMessage(err, 'Registration failed'))
     } finally { setLoading(false) }
   }
 
@@ -98,7 +98,7 @@ export default function RegisterPage() {
       toast.success('Account created successfully!')
       navigate(user.role === 'ADMIN' ? '/admin/dashboard' : '/')
     } catch (err) {
-      toast.error(err.response?.data?.message || 'OTP verification failed')
+      toast.error(apiErrorMessage(err, 'OTP verification failed'))
     } finally {
       setLoading(false)
     }
@@ -113,7 +113,7 @@ export default function RegisterPage() {
       setOtp(['', '', '', '', '', ''])
       otpRefs.current[0]?.focus()
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to resend OTP')
+      toast.error(apiErrorMessage(err, 'Failed to resend OTP'))
     } finally {
       setLoading(false)
     }

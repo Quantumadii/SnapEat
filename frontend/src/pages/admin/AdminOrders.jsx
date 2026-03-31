@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import AdminLayout from './AdminLayout'
-import { adminAPI } from '../../api'
+import { adminAPI, apiErrorMessage } from '../../api'
 import useAuthStore from '../../store/useAuthStore'
 
-const STATUSES    = ['ALL','PLACED','PREPARING','READY','COMPLETED','CANCELLED']
-const STATUS_CSS  = { PLACED:'status-PLACED', PREPARING:'status-PREPARING', READY:'status-READY', COMPLETED:'status-COMPLETED', CANCELLED:'status-CANCELLED' }
-const NEXT_STATUS = { PLACED:'PREPARING', PREPARING:'READY', READY:'COMPLETED' }
-const NEXT_LABEL  = { PLACED:'Start Preparing', PREPARING:'Mark Ready', READY:'Mark Delivered' }
+const STATUSES    = ['ALL','PLACED','CONFIRMED','PREPARING','READY','COMPLETED','CANCELLED']
+const STATUS_CSS  = { PLACED:'status-PLACED', CONFIRMED:'status-CONFIRMED', PREPARING:'status-PREPARING', READY:'status-READY', COMPLETED:'status-COMPLETED', CANCELLED:'status-CANCELLED' }
+const NEXT_STATUS = { PLACED:'CONFIRMED', CONFIRMED:'PREPARING', PREPARING:'READY', READY:'COMPLETED' }
+const NEXT_LABEL  = { PLACED:'Accept Order', CONFIRMED:'Start Preparing', PREPARING:'Mark Ready', READY:'Mark Delivered' }
 
 export default function AdminOrders() {
   const { user }       = useAuthStore()
@@ -23,7 +23,7 @@ export default function AdminOrders() {
     setLoading(true)
     adminAPI.getOrders(restaurantId, filter === 'ALL' ? null : filter)
       .then((r) => setOrders(r.data.data || []))
-      .catch(() => toast.error('Failed to load orders'))
+      .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load orders')))
       .finally(() => setLoading(false))
   }
 
@@ -35,7 +35,7 @@ export default function AdminOrders() {
       await adminAPI.updateOrderStatus(orderId, status)
       toast.success(`Order marked as ${status}`)
       fetchOrders()
-    } catch { toast.error('Failed to update status') }
+    } catch (err) { toast.error(apiErrorMessage(err, 'Failed to update status')) }
     finally { setUpdating(null) }
   }
 
@@ -129,7 +129,7 @@ export default function AdminOrders() {
                           : <><i className="bi bi-arrow-right-circle" />{NEXT_LABEL[order.status]}</>}
                       </button>
                     )}
-                    {(order.status === 'PLACED' || order.status === 'PREPARING') && (
+                    {(order.status === 'PLACED' || order.status === 'CONFIRMED' || order.status === 'PREPARING') && (
                       <button onClick={() => handleStatus(order.id, 'CANCELLED')}
                         disabled={updating === order.id}
                         className="text-sm px-3 py-1.5 border border-red-300 text-red-500 rounded-lg bg-transparent cursor-pointer hover:bg-red-50 transition-colors">

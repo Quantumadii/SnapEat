@@ -3,18 +3,19 @@ import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { orderAPI, ratingAPI } from '../api'
+import { apiErrorMessage, orderAPI, ratingAPI } from '../api'
 import useAuthStore from '../store/useAuthStore'
 
 const STATUS_CONFIG = {
-  PLACED:    { label: 'Order Placed',    badge: 'status-PLACED',    icon: 'bi-bag-check' },
+  PLACED:    { label: 'Awaiting Confirmation', badge: 'status-PLACED',    icon: 'bi-hourglass-split' },
+  CONFIRMED: { label: 'Order Confirmed',       badge: 'status-CONFIRMED', icon: 'bi-patch-check-fill' },
   PREPARING: { label: 'Preparing',        badge: 'status-PREPARING', icon: 'bi-fire' },
   READY:     { label: 'Out for Delivery', badge: 'status-READY',     icon: 'bi-bicycle' },
   COMPLETED: { label: 'Delivered',        badge: 'status-COMPLETED', icon: 'bi-check-circle-fill' },
   CANCELLED: { label: 'Cancelled',        badge: 'status-CANCELLED', icon: 'bi-x-circle-fill' },
 }
 
-const STEPS = ['PLACED', 'PREPARING', 'READY', 'COMPLETED']
+const STEPS = ['PLACED', 'CONFIRMED', 'PREPARING', 'READY', 'COMPLETED']
 const STAR_LABELS = {
   1: 'Poor',
   2: 'Fair',
@@ -28,13 +29,13 @@ export default function OrdersPage() {
   const [orders, setOrders]   = useState([])
   const [loading, setLoading] = useState(true)
   const [ratingOrder, setRatingOrder] = useState(null)
-  const [ratingForm, setRatingForm] = useState({ menuItemId: '', score: 5, comment: '' })
+  const [ratingForm, setRatingForm] = useState({ orderId: '', menuItemId: '', score: 5, comment: '' })
   const [submittingRating, setSubmittingRating] = useState(false)
 
   const fetchOrders = () => {
     orderAPI.getMyOrders()
       .then((r) => setOrders(r.data.data || []))
-      .catch(() => toast.error('Failed to load orders'))
+      .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load orders')))
       .finally(() => setLoading(false))
   }
 
@@ -46,45 +47,46 @@ export default function OrdersPage() {
       toast.success('Order cancelled')
       fetchOrders()
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Cannot cancel this order')
+      toast.error(apiErrorMessage(err, 'Cannot cancel this order'))
     }
   }
 
   const openRating = (order) => {
     const resolvedMenuItemId = order.orderItems?.[0]?.menuItemId ?? ''
     setRatingOrder(order)
-    setRatingForm({ menuItemId: resolvedMenuItemId, score: 5, comment: '' })
+    setRatingForm({ orderId: order.id, menuItemId: resolvedMenuItemId, score: 5, comment: '' })
   }
 
   const submitRating = async (e) => {
     e.preventDefault()
     const resolvedUserId = user?.userId ?? user?.id ?? null
+    const resolvedOrderId = Number(ratingForm.orderId)
     const resolvedMenuItemId = Number(ratingForm.menuItemId)
 
     if (!resolvedUserId) {
       toast.error('Please login again to submit your rating')
       return
     }
-    if (!ratingForm.menuItemId) {
-      toast.error('Menu item not found for this order')
-      return
-    }
-    if (!Number.isFinite(resolvedMenuItemId) || resolvedMenuItemId <= 0) {
-      toast.error('Invalid menu item selected for rating')
+    if (!ratingForm.orderId || !Number.isFinite(resolvedOrderId) || resolvedOrderId <= 0) {
+      toast.error('Order not found for this rating')
       return
     }
     setSubmittingRating(true)
     try {
       await ratingAPI.add({
         userId: resolvedUserId,
-        menuItemId: resolvedMenuItemId,
+        orderId: resolvedOrderId,
+        menuItemId: Number.isFinite(resolvedMenuItemId) && resolvedMenuItemId > 0
+          ? resolvedMenuItemId
+          : null,
         score: Number(ratingForm.score),
         comment: ratingForm.comment.trim(),
       })
       toast.success('Thanks for your review!')
       setRatingOrder(null)
+      fetchOrders()
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to submit rating')
+      toast.error(apiErrorMessage(err, 'Failed to submit rating'))
     } finally {
       setSubmittingRating(false)
     }
@@ -160,7 +162,7 @@ export default function OrdersPage() {
 
                   <OrderProgress status={order.status} />
 
-                  {(order.status === 'PLACED' || order.status === 'PREPARING') && (
+                  {(order.status === 'PLACED' || order.status === 'CONFIRMED' || order.status === 'PREPARING') && (
                     <div className="mt-3 text-right">
                       <button onClick={() => handleCancel(order.id)}
                         className="text-sm px-3 py-1.5 border border-red-400 text-red-500 rounded-lg bg-transparent cursor-pointer hover:bg-red-50 transition-colors">
@@ -173,7 +175,7 @@ export default function OrdersPage() {
                     <div className="mt-3 text-right">
                       <button
                         onClick={() => openRating(order)}
-                        className="text-sm px-3 py-1.5 border border-brand text-brand rounded-lg bg-transparent cursor-pointer hover:bg-brand-light transition-colors"
+                        className="text-sm px-3 py-1.5 border rounded-lg bg-transparent transition-colors border-brand text-brand cursor-pointer hover:bg-brand-light"
                       >
                         Rate Restaurant
                       </button>

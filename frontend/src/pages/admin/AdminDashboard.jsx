@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import AdminLayout from './AdminLayout'
-import { adminAPI } from '../../api'
+import { adminAPI, apiErrorMessage } from '../../api'
 import useAuthStore from '../../store/useAuthStore'
 
 const STATUS_COLORS = {
   PLACED:    'status-PLACED',
+  CONFIRMED: 'status-CONFIRMED',
   PREPARING: 'status-PREPARING',
   READY:     'status-READY',
   COMPLETED: 'status-COMPLETED',
@@ -23,7 +24,7 @@ export default function AdminDashboard() {
     setLoading(true)
     adminAPI.getDashboard(restaurantId)
       .then((r) => setStats(r.data.data))
-      .catch(() => toast.error('Failed to load dashboard'))
+      .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load dashboard')))
       .finally(() => setLoading(false))
   }
 

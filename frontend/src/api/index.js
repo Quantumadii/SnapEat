@@ -1,5 +1,12 @@
 import api from './axios'
 
+export const apiErrorMessage = (err, fallback = 'Something went wrong. Please try again.') => {
+  if (!err || !err.response) {
+    return 'Server is down. Please try again later.'
+  }
+  return err.response?.data?.message || fallback
+}
+
 export const authAPI = {
   register:       (data)  => api.post('/auth/register', data),
   sendRegisterOtp: (data) => api.post('/auth/register/send-otp', data),
@@ -8,7 +15,7 @@ export const authAPI = {
   forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
   resetPassword:  (data)  => api.post('/auth/reset-password', data),
   changePassword: (data)  => api.post('/auth/change-password', data),
-  deleteAccount:  ()      => api.delete('/account/me'),
+  deleteAccount:  ()      => api.delete('/auth/delete'),
 }
 
 export const restaurantAPI = {

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { restaurantAPI } from '../api'
+import { apiErrorMessage, restaurantAPI } from '../api'
 
 export default function HomePage() {
   const [restaurants, setRestaurants] = useState([])
@@ -12,7 +13,7 @@ export default function HomePage() {
   useEffect(() => {
     restaurantAPI.getAll()
       .then((r) => setRestaurants(r.data.data || []))
-      .catch(() => {})
+      .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load restaurants')))
       .finally(() => setLoading(false))
   }, [])
 
@@ -128,8 +129,11 @@ export default function HomePage() {
 }
 
 function RestaurantCard({ restaurant: r }) {
-  const hasRating = typeof r.avgRating === 'number' && Number.isFinite(r.avgRating)
-  const ratingLabel = hasRating ? r.avgRating.toFixed(1) : 'New'
+  const resolvedRating = Number(r?.avgRating ?? r?.averageRating)
+  const hasRating = Number.isFinite(resolvedRating) && resolvedRating > 0
+  const ratingLabel = hasRating ? resolvedRating.toFixed(1) : 'New'
+
+  console.log(r.name, r.avgRating, r.averageRating);
 
   return (
     <Link to={`/restaurant/${r.id}`} className="no-underline">

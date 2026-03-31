@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { restaurantAPI } from '../api'
+import { apiErrorMessage, restaurantAPI } from '../api'
 
 const VALUES = [
   { icon: 'bi-award',        title: 'Quality Food',    desc: 'Every dish crafted with care and the finest ingredients.' },
@@ -27,7 +28,7 @@ export default function AboutPage() {
           averageRating: typeof data.averageRating === 'number' ? data.averageRating : null,
         })
       })
-      .catch(() => {})
+      .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load platform stats')))
   }, [])
 
   const avgRatingLabel =

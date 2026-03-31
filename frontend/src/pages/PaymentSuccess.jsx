@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import useCartStore from '../store/useCartStore'
-import { orderAPI, paymentAPI } from '../api'
+import { apiErrorMessage, orderAPI, paymentAPI } from '../api'
 
 export default function PaymentSuccess() {
   const [searchParams] = useSearchParams()
@@ -37,7 +37,7 @@ export default function PaymentSuccess() {
         }
       })
       .catch((err) => {
-        setError(err.response?.data?.message || 'Unable to verify order status right now.')
+        setError(apiErrorMessage(err, 'Unable to verify order status right now.'))
       })
       .finally(() => setLoading(false))
 
@@ -48,7 +48,7 @@ export default function PaymentSuccess() {
         await paymentAPI.verifyCheckoutSession(sessionId)
         await loadOrder()
       } catch (err) {
-        const msg = err.response?.data?.message || 'Unable to verify Stripe checkout session.'
+        const msg = apiErrorMessage(err, 'Unable to verify Stripe checkout session.')
 
         if (attempt < 4) {
           await wait(1200)
@@ -88,7 +88,7 @@ export default function PaymentSuccess() {
               </div>
               <h3 className="font-bold mb-2">Payment Successful</h3>
               <p className="text-gray-500 mb-6">
-                Your order has been confirmed and is now being processed.
+                Your order has been placed and is now being processed.
               </p>
 
               <div className="bg-gray-50 rounded-xl px-4 py-3 text-left max-w-md mx-auto mb-6">

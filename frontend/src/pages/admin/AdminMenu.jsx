@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
 import AdminLayout from './AdminLayout'
-import { adminAPI } from '../../api'
+import { adminAPI, apiErrorMessage } from '../../api'
 import useAuthStore from '../../store/useAuthStore'
 
 const CATEGORIES   = ['STARTER','MAIN_COURSE','BEVERAGES','SNACKS','CHINESE','RICE','ADD_ONS']
@@ -49,7 +49,7 @@ export default function AdminMenu() {
     if (!restaurantId) return
     adminAPI.getAdminMenu(restaurantId)
       .then((r) => setItems(r.data.data || []))
-      .catch(() => toast.error('Failed to load menu'))
+      .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load menu')))
       .finally(() => setLoading(false))
   }
 
@@ -88,7 +88,7 @@ export default function AdminMenu() {
       setShowModal(false)
       fetchMenu()
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Save failed')
+      toast.error(apiErrorMessage(err, 'Save failed'))
     } finally { setSaving(false) }
   }
 
@@ -117,12 +117,12 @@ export default function AdminMenu() {
   const handleDelete = async (id) => {
     if (!window.confirm('Remove this item from the menu?')) return
     try { await adminAPI.deleteMenuItem(id); toast.success('Item removed'); fetchMenu() }
-    catch { toast.error('Failed to delete') }
+    catch (err) { toast.error(apiErrorMessage(err, 'Failed to delete')) }
   }
 
   const handleToggle = async (id) => {
     try { await adminAPI.toggleMenuItem(id); fetchMenu() }
-    catch { toast.error('Failed to toggle') }
+    catch (err) { toast.error(apiErrorMessage(err, 'Failed to toggle')) }
   }
 
   const displayed = filterCat === 'ALL' ? items : items.filter((i) => i.category === filterCat)

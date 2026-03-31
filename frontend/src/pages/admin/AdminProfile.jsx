@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import AdminLayout from './AdminLayout'
-import { adminAPI, authAPI } from '../../api'
+import { adminAPI, apiErrorMessage, authAPI } from '../../api'
 import useAuthStore from '../../store/useAuthStore'
 
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024
@@ -27,7 +27,7 @@ export default function AdminProfile() {
     if (!restaurantId) return
     adminAPI.getRestaurant(restaurantId)
       .then((r) => setRestForm(r.data.data || {}))
-      .catch(() => toast.error('Failed to load restaurant info'))
+      .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load restaurant info')))
   }, [restaurantId])
 
   const handleRestSave = async (e) => {
@@ -50,7 +50,7 @@ export default function AdminProfile() {
       toast.success('Restaurant profile updated!')
       setBannerFile(null)
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Update failed')
+      toast.error(apiErrorMessage(err, 'Update failed'))
     } finally { setSavingRest(false) }
   }
 
@@ -63,7 +63,7 @@ export default function AdminProfile() {
       toast.success('Password changed successfully!')
       setPassForm({ currentPassword: '', newPassword: '', confirm: '' })
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to change password')
+      toast.error(apiErrorMessage(err, 'Failed to change password'))
     } finally { setSavingPass(false) }
   }
 
@@ -105,7 +105,7 @@ export default function AdminProfile() {
       toast.success('Account deleted successfully')
       navigate('/')
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to delete account')
+      toast.error(apiErrorMessage(err, 'Failed to delete account'))
     } finally {
       setDeletingAccount(false)
     }
