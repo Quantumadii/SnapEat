@@ -258,9 +258,6 @@ export default function AdminProfile() {
         </div>
         )}
 
-        {!activePanel && (
-          <div className="text-center text-sm text-gray-500 py-8">Select an action above to open the form.</div>
-        )}
 
         <div className="snap-card p-6 mt-6">
           <h6 className="font-bold mb-1">Account</h6>

@@ -22,8 +22,9 @@ import AdminOrders    from './pages/admin/AdminOrders'
 import AdminProfile   from './pages/admin/AdminProfile'
 
 function PrivateRoute({ children }) {
+  
   const { user } = useAuthStore()
-  return user ? children : <Navigate to="/login" replace />
+  return user ? children : <Navigate to="/" replace />
 }
 function AdminRoute({ children }) {
   const { user } = useAuthStore()
