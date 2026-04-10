@@ -17,6 +17,7 @@ import PaymentSuccess from './pages/PaymentSuccess'
 import PaymentFailure from './pages/PaymentFailure'
 
 import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminBranches  from './pages/admin/AdminBranches'
 import AdminMenu      from './pages/admin/AdminMenu'
 import AdminOrders    from './pages/admin/AdminOrders'
 import AdminProfile   from './pages/admin/AdminProfile'
@@ -62,6 +63,7 @@ export default function App() {
 
       {/* Admin */}
       <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+      <Route path="/admin/branches"  element={<AdminRoute><AdminBranches /></AdminRoute>} />
       <Route path="/admin/menu"      element={<AdminRoute><AdminMenu /></AdminRoute>} />
       <Route path="/admin/orders"    element={<AdminRoute><AdminOrders /></AdminRoute>} />
       <Route path="/admin/profile"   element={<AdminRoute><AdminProfile /></AdminRoute>} />

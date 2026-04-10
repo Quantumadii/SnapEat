@@ -8,7 +8,7 @@ import { apiErrorMessage, orderAPI, paymentAPI } from '../api'
 
 export default function CartPage() {
   const navigate = useNavigate()
-  const { items, restaurantId, restaurantName, updateQuantity, removeItem, clearCart, getTotalPrice } = useCartStore()
+  const { items, restaurantId, restaurantName, branchId, branchName, updateQuantity, removeItem, clearCart, getTotalPrice } = useCartStore()
   const [form, setForm]   = useState({ flatNo: '', deliveryArea: '', deliveryCity: '', pincode: '', specialInstructions: '' })
   const [paymentMethod, setPaymentMethod] = useState('COD')
   const [loading, setLoading] = useState(false)
@@ -39,6 +39,7 @@ export default function CartPage() {
     try {
       const payload = {
         restaurantId,
+        branchId: branchId || null,
         items: items.map((i) => ({ menuItemId: i.id, quantity: i.quantity })),
         paymentMethod,
         ...form,
@@ -109,7 +110,7 @@ export default function CartPage() {
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
         <h3 className="font-bold mb-1">Your Cart</h3>
-        <p className="text-gray-500 mb-6 text-sm"><i className="bi bi-shop text-brand mr-1" />{restaurantName}</p>
+        <p className="text-gray-500 mb-6 text-sm"><i className="bi bi-shop text-brand mr-1" />{restaurantName}{branchName ? ` · ${branchName}` : ''}</p>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 

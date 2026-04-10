@@ -9,10 +9,10 @@ import useAuthStore from '../store/useAuthStore'
 const STATUS_CONFIG = {
   PLACED:    { label: 'Awaiting Confirmation', badge: 'status-PLACED',    icon: 'bi-hourglass-split' },
   CONFIRMED: { label: 'Order Confirmed',       badge: 'status-CONFIRMED', icon: 'bi-patch-check-fill' },
-  PREPARING: { label: 'Preparing',        badge: 'status-PREPARING', icon: 'bi-fire' },
-  READY:     { label: 'Out for Delivery', badge: 'status-READY',     icon: 'bi-bicycle' },
-  COMPLETED: { label: 'Delivered',        badge: 'status-COMPLETED', icon: 'bi-check-circle-fill' },
-  CANCELLED: { label: 'Cancelled',        badge: 'status-CANCELLED', icon: 'bi-x-circle-fill' },
+  PREPARING: { label: 'Preparing',             badge: 'status-PREPARING', icon: 'bi-fire' },
+  READY:     { label: 'Out for Delivery',      badge: 'status-READY',     icon: 'bi-bicycle' },
+  COMPLETED: { label: 'Delivered',             badge: 'status-COMPLETED', icon: 'bi-check-circle-fill' },
+  CANCELLED: { label: 'Cancelled',             badge: 'status-CANCELLED', icon: 'bi-x-circle-fill' },
 }
 
 const STEPS = ['PLACED', 'CONFIRMED', 'PREPARING', 'READY', 'COMPLETED']
@@ -28,18 +28,27 @@ export default function OrdersPage() {
   const { user } = useAuthStore()
   const [orders, setOrders]   = useState([])
   const [loading, setLoading] = useState(true)
+  const [page, setPage]       = useState(0)
+  const [pagination, setPagination] = useState({ totalPages: 1, totalElements: 0 })
   const [ratingOrder, setRatingOrder] = useState(null)
   const [ratingForm, setRatingForm] = useState({ orderId: '', menuItemId: '', score: 5, comment: '' })
   const [submittingRating, setSubmittingRating] = useState(false)
 
   const fetchOrders = () => {
-    orderAPI.getMyOrders()
-      .then((r) => setOrders(r.data.data || []))
+    orderAPI.getMyOrders(page, 10)
+      .then((r) => {
+        const pageData = r.data.data || {}
+        setOrders(pageData?.content || [])
+        setPagination({
+          totalPages: Number(pageData?.totalPages ?? 1),
+          totalElements: Number(pageData?.totalElements ?? 0),
+        })
+      })
       .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load orders')))
       .finally(() => setLoading(false))
   }
 
-  useEffect(() => { fetchOrders() }, [])
+  useEffect(() => { fetchOrders() }, [page])
 
   const handleCancel = async (orderId) => {
     try {
@@ -122,21 +131,27 @@ export default function OrdersPage() {
         ) : (
           <div className="space-y-4">
             {orders.map((order) => {
-              const cfg = STATUS_CONFIG[order.status] || STATUS_CONFIG.PLACED
+              {/* const cfg = STATUS_CONFIG[order.status] || STATUS_CONFIG.PLACED
+              return (
+                <div key={order.id} className="snap-card p-6 fade-up"> */}
+                  {/* Header */}
               return (
                 <div key={order.id} className="snap-card p-6 fade-up">
-                  {/* Header */}
                   <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
                     <div>
                       <p className="text-gray-500 text-xs mb-0">Order #{order.id}</p>
                       <h6 className="font-bold mb-0">{order.restaurantName}</h6>
                       <p className="text-gray-500 text-xs mb-0">
+                        <i className="bi bi-shop text-brand mr-1" />
+                        {order.branchName || 'Main branch'}
+                      </p>
+                      <p className="text-gray-500 text-xs mb-0">
                         {new Date(order.createdAt).toLocaleString('en-IN')}
                       </p>
+                      {/* <span className={cfg.badge}>
+                      <i className={bi ${cfg.icon} mr-1} />{cfg.label}
+                    </span> */}
                     </div>
-                    <span className={cfg.badge}>
-                      <i className={`bi ${cfg.icon} mr-1`} />{cfg.label}
-                    </span>
                   </div>
 
                   <div className="rounded-xl p-3 mb-3 bg-gray-50">
@@ -162,7 +177,7 @@ export default function OrdersPage() {
 
                   <OrderProgress status={order.status} />
 
-                  {(order.status === 'PLACED' || order.status === 'CONFIRMED' || order.status === 'PREPARING') && (
+                  {order.canCancel && (
                     <div className="mt-3 text-right">
                       <button onClick={() => handleCancel(order.id)}
                         className="text-sm px-3 py-1.5 border border-red-400 text-red-500 rounded-lg bg-transparent cursor-pointer hover:bg-red-50 transition-colors">
@@ -184,6 +199,17 @@ export default function OrdersPage() {
                 </div>
               )
             })}
+            <div className="flex justify-center items-center gap-2 mt-6">
+              <button onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0}
+                className="px-3 py-2 border rounded-lg text-sm cursor-pointer disabled:opacity-50">
+                <i className="bi bi-chevron-left" /> Previous
+              </button>
+              <span className="text-sm font-medium">Page {page + 1} of {Math.max(1, pagination.totalPages)}</span>
+              <button onClick={() => setPage(Math.min(Math.max(1, pagination.totalPages) - 1, page + 1))} disabled={page >= Math.max(1, pagination.totalPages) - 1}
+                className="px-3 py-2 border rounded-lg text-sm cursor-pointer disabled:opacity-50">
+                Next <i className="bi bi-chevron-right" />
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -272,14 +298,19 @@ function OrderProgress({ status }) {
   )
   const current = STEPS.indexOf(status)
   return (
-    <div className="flex items-center">
+    <div className="flex items-start gap-0.5">
       {STEPS.map((step, i) => (
-        <div key={step} className="flex items-center flex-1">
-          <div className={`progress-step ${i <= current ? 'done' : 'pending'}`}>
-            {i < current ? <i className="bi bi-check" /> : i + 1}
+        <div key={step} className="flex items-start flex-1">
+          <div className="progress-stage">
+            <div className={`progress-step ${i <= current ? 'done' : 'pending'}`}>
+              {i < current ? <i className="bi bi-check" /> : i + 1}
+            </div>
+            <div className={`progress-stage-label ${i <= current ? 'done' : 'pending'}`}>
+              {STATUS_CONFIG[step].label}
+            </div>
           </div>
           {i < STEPS.length - 1 && (
-            <div className={`progress-line flex-1 ${i < current ? 'done' : 'pending'}`} />
+            <div className={`progress-line progress-line-offset flex-1 ${i < current ? 'done' : 'pending'}`} />
           )}
         </div>
       ))}

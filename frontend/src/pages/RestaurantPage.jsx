@@ -18,39 +18,103 @@ const CATEGORIES = [
   { value: 'ADD_ONS',     label: '➕ Add Ons' },
 ]
 
+const MENU_PAGE_SIZE = 8
+
 export default function RestaurantPage() {
   const { id }            = useParams()
   const { user }          = useAuthStore()
   const { addItem, items, updateQuantity, removeItem } = useCartStore()
   const [restaurant, setRestaurant] = useState(null)
-  const [menu, setMenu]             = useState([])
+  const [branches, setBranches]     = useState([])
+  const [selectedBranchId, setSelectedBranchId] = useState('')
+  const [menuItems, setMenuItems]   = useState([])
   const [activeCategory, setActiveCategory] = useState(null)
+  const [menuPage, setMenuPage]     = useState(0)
   const [vegOnly, setVegOnly]       = useState(false)
   const [loading, setLoading]       = useState(true)
+  const [menuLoading, setMenuLoading] = useState(false)
+
+  const selectedBranch = branches.find((b) => String(b.id) === String(selectedBranchId)) || null
 
   const resolvedRating = Number(restaurant?.avgRating ?? restaurant?.averageRating)
   const hasRating = Number.isFinite(resolvedRating) && resolvedRating > 0
   const ratingLabel = hasRating ? resolvedRating.toFixed(1) : 'New'
 
   useEffect(() => {
-    Promise.all([restaurantAPI.getById(id), menuAPI.getMenu(id)])
-      .then(([rRes, mRes]) => { setRestaurant(rRes.data.data); setMenu(mRes.data.data || []) })
+    Promise.all([restaurantAPI.getById(id), restaurantAPI.getBranches(id)])
+      .then(([rRes, bRes]) => {
+        setRestaurant(rRes.data.data)
+        const branchList = bRes.data.data || []
+        setBranches(branchList)
+        setSelectedBranchId(branchList[0]?.id ? String(branchList[0].id) : '')
+      })
       .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load menu')))
       .finally(() => setLoading(false))
   }, [id])
 
   useEffect(() => {
-    menuAPI.getMenu(id, activeCategory)
-      .then((r) => setMenu(r.data.data || []))
-      .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load menu')))
-  }, [activeCategory, id])
+    let ignore = false
+    const fetchAllMenuItems = async () => {
+      setMenuLoading(true)
+      try {
+        const size = 100
+        let page = 0
+        let totalPages = 1
+        const collected = []
 
-  const filtered  = vegOnly ? menu.filter((m) => m.veg) : menu
+        while (page < totalPages) {
+          const res = await menuAPI.getMenu(id, selectedBranchId || null, page, size)
+          const payload = res.data.data || {}
+          collected.push(...(payload.content || []))
+          totalPages = Number(payload.totalPages || 0)
+          page += 1
+        }
+
+        if (!ignore) {
+          setMenuItems(collected)
+        }
+      } catch (err) {
+        if (!ignore) {
+          toast.error(apiErrorMessage(err, 'Failed to load menu'))
+        }
+      } finally {
+        if (!ignore) {
+          setMenuLoading(false)
+        }
+      }
+    }
+
+    fetchAllMenuItems()
+
+    return () => {
+      ignore = true
+    }
+  }, [id, selectedBranchId])
+
+  useEffect(() => {
+    setMenuPage(0)
+  }, [activeCategory, selectedBranchId])
+
+  const categoryFiltered = activeCategory
+    ? menuItems.filter((m) => m.category === activeCategory)
+    : menuItems
+  const filtered = vegOnly ? categoryFiltered.filter((m) => m.veg) : categoryFiltered
+  const menuTotalItems = filtered.length
+  const menuTotalPages = Math.ceil(menuTotalItems / MENU_PAGE_SIZE)
+  const currentPage = Math.min(menuPage, Math.max(menuTotalPages - 1, 0))
+  const pagedItems = filtered.slice(currentPage * MENU_PAGE_SIZE, (currentPage + 1) * MENU_PAGE_SIZE)
+
+  useEffect(() => {
+    if (menuPage !== currentPage) {
+      setMenuPage(currentPage)
+    }
+  }, [currentPage, menuPage])
+
   const getQty    = (itemId) => items.find((i) => i.id === itemId)?.quantity || 0
   const handleAdd = (item) => {
     if (!user) { toast.error('Please sign in to add items'); return }
     if (user.role === 'ADMIN') { toast.error('Admins cannot place orders'); return }
-    addItem(item, Number(id), restaurant?.name)
+    addItem(item, Number(id), restaurant?.name, selectedBranch?.id || null, selectedBranch?.branchName || '')
     toast.success(`${item.name} added!`)
   }
 
@@ -95,6 +159,71 @@ export default function RestaurantPage() {
               <span><i className="bi bi-telephone text-brand mr-1" />{restaurant.contactPhone}</span>
             )}
           </div>
+          {branches.length > 0 && (
+            <div className="mt-6 max-w-5xl">
+              <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,0.75)' }}>Choose a branch before ordering</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mb-4">
+                {branches.map((branch) => {
+                  const isActive = String(selectedBranchId) === String(branch.id)
+                  return (
+                    <button
+                      key={branch.id}
+                      onClick={() => setSelectedBranchId(String(branch.id))}
+                      className={`text-left rounded-2xl border p-4 transition-all ${isActive ? 'border-brand bg-white/10 shadow-lg' : 'border-white/10 bg-white/5 hover:bg-white/10'}`}
+                      style={{ color: '#fff' }}
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <div>
+                          <h6 className="font-bold mb-1">{branch.branchName}</h6>
+                          <p className="text-sm mb-0" style={{ color: 'rgba(255,255,255,0.72)' }}>{branch.area}, {branch.city}</p>
+                        </div>
+                        <span className={`text-xs font-semibold px-2 py-1 rounded-full ${isActive ? 'bg-brand text-white' : 'bg-white/10 text-white'}`}>
+                          {isActive ? 'Selected' : 'Select'}
+                        </span>
+                      </div>
+                      {branch.openingHours && (
+                        <p className="text-sm mb-1" style={{ color: 'rgba(255,255,255,0.78)' }}>
+                          <i className="bi bi-clock text-brand mr-1" /> {branch.openingHours}
+                        </p>
+                      )}
+                      {branch.contactPhone && (
+                        <p className="text-sm mb-1" style={{ color: 'rgba(255,255,255,0.78)' }}>
+                          <i className="bi bi-telephone text-brand mr-1" /> {branch.contactPhone}
+                        </p>
+                      )}
+                      {branch.deliveryCoverage && (
+                        <p className="text-sm mb-0" style={{ color: 'rgba(255,255,255,0.78)' }}>
+                          <i className="bi bi-truck text-brand mr-1" /> {branch.deliveryCoverage}
+                        </p>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+              {selectedBranch && (
+                <div className="rounded-2xl border border-white/10 bg-white/10 p-4" style={{ color: '#fff' }}>
+                  <div className="flex flex-wrap items-center gap-3 justify-between mb-2">
+                    <h6 className="font-bold mb-0">{selectedBranch.branchName}</h6>
+                    <span className="text-xs px-2 py-1 rounded-full bg-brand text-white font-semibold">Ordering from this branch</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                    <div>
+                      <p className="mb-1" style={{ color: 'rgba(255,255,255,0.65)' }}>Hours</p>
+                      <p className="mb-0 font-semibold">{selectedBranch.openingHours || 'Not set'}</p>
+                    </div>
+                    <div>
+                      <p className="mb-1" style={{ color: 'rgba(255,255,255,0.65)' }}>Contact</p>
+                      <p className="mb-0 font-semibold">{selectedBranch.contactPhone || 'Not set'}</p>
+                    </div>
+                    <div>
+                      <p className="mb-1" style={{ color: 'rgba(255,255,255,0.65)' }}>Delivery Coverage</p>
+                      <p className="mb-0 font-semibold">{selectedBranch.deliveryCoverage || 'Not set'}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -103,7 +232,7 @@ export default function RestaurantPage() {
         <div className="max-w-7xl mx-auto px-4 py-2">
           <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
             {CATEGORIES.map((cat) => (
-              <button key={String(cat.value)} onClick={() => setActiveCategory(cat.value)}
+              <button key={String(cat.value)} onClick={() => { setActiveCategory(cat.value); setMenuPage(0) }}
                 className={`cat-pill ${activeCategory === cat.value ? 'active' : ''}`}>
                 {cat.label}
               </button>
@@ -120,6 +249,16 @@ export default function RestaurantPage() {
 
       {/* Menu grid */}
       <div className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
+        {menuLoading && (
+          <div className="text-center mb-4">
+            <div className="inline-block w-7 h-7 border-4 border-brand border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+        {!menuLoading && menuTotalItems > 0 && (
+          <p className="text-sm text-gray-500 mb-4">
+            Showing page {currentPage + 1} of {Math.max(menuTotalPages, 1)} • {menuTotalItems} items
+          </p>
+        )}
         {filtered.length === 0 ? (
           <div className="text-center py-16">
             <i className="bi bi-basket text-gray-400" style={{ fontSize: '3rem' }} />
@@ -127,11 +266,33 @@ export default function RestaurantPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filtered.map((item) => (
+            {pagedItems.map((item) => (
               <MenuCard key={item.id} item={item} qty={getQty(item.id)} onAdd={handleAdd}
                 onInc={() => handleAdd(item)}
                 onDec={() => getQty(item.id) === 1 ? removeItem(item.id) : updateQuantity(item.id, getQty(item.id) - 1)} />
             ))}
+          </div>
+        )}
+
+        {menuTotalPages > 1 && (
+          <div className="flex justify-center items-center gap-2 mt-8">
+            <button
+              onClick={() => setMenuPage((prev) => Math.max(prev - 1, 0))}
+              disabled={currentPage === 0}
+              className="px-3 py-1.5 rounded-xl border border-gray-300 text-sm disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <span className="text-sm text-gray-600">
+              Page {currentPage + 1} / {menuTotalPages}
+            </span>
+            <button
+              onClick={() => setMenuPage((prev) => Math.min(prev + 1, menuTotalPages - 1))}
+              disabled={currentPage >= menuTotalPages - 1}
+              className="px-3 py-1.5 rounded-xl border border-gray-300 text-sm disabled:opacity-50"
+            >
+              Next
+            </button>
           </div>
         )}
       </div>
@@ -164,6 +325,9 @@ function MenuCard({ item, qty, onAdd, onInc, onDec }) {
           <span className="text-brand font-semibold" style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             {item.categoryLabel}
           </span>
+          {!item.shared && item.branchName && (
+            <p className="text-xs text-gray-500 mb-1">Branch special: {item.branchName}</p>
+          )}
           <h6 className="font-bold mb-1 mt-1">{item.name}</h6>
           {item.description && (
             <p className="text-gray-500 text-sm mb-0"

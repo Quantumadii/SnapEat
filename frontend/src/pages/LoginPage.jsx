@@ -19,7 +19,7 @@ export default function LoginPage() {
     try {
       const res = await authAPI.login(form)
       const { token, ...user } = res.data.data
-      setAuth(user, token)
+      setAuth(user, token) 
       toast.success(`Welcome back, ${user.fullName?.split(' ')[0]}!`)
       navigate(user.role === 'ADMIN' ? '/admin/dashboard' : '/')
     } catch (err) {

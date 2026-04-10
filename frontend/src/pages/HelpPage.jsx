@@ -9,7 +9,7 @@ const FAQS = [
   { q: 'What payment methods are accepted?',
     a: 'we support Cash on Delivery (COD) and online payments(stripe), you pay either way.' },
   { q: 'Can I cancel my order?',
-    a: 'Yes, you can cancel an order as long as it is in PLACED, CONFIRMED, or PREPARING status. Once it is marked READY, cancellation is not possible.' },
+    a: 'Cancellation depends on the restaurant policy. Each restaurant can set the last stage up to which customers can cancel from their admin settings.' },
   { q: 'How do I track my order?',
     a: "After placing an order, go to \"My Orders\". You'll see a real-time progress bar — Placed → Confirmed → Preparing → Ready → Delivered. You also get email updates at every stage." },
   { q: 'I forgot my password. What do I do?',

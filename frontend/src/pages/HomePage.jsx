@@ -6,16 +6,26 @@ import Footer from '../components/Footer'
 import { apiErrorMessage, restaurantAPI } from '../api'
 
 export default function HomePage() {
+  const PAGE_SIZE = 8
   const [restaurants, setRestaurants] = useState([])
   const [search, setSearch]           = useState('')
   const [loading, setLoading]         = useState(true)
+  const [page, setPage]               = useState(0)
+  const [pagination, setPagination]   = useState({ totalPages: 1, totalElements: 0 })
 
   useEffect(() => {
-    restaurantAPI.getAll()
-      .then((r) => setRestaurants(r.data.data || []))
+    restaurantAPI.getAll(page, PAGE_SIZE)
+      .then((r) => {
+        const pageData = r.data.data || {}
+        setRestaurants(pageData?.content || [])
+        setPagination({
+          totalPages: Number(pageData?.totalPages ?? 1),
+          totalElements: Number(pageData?.totalElements ?? 0),
+        })
+      })
       .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load restaurants')))
       .finally(() => setLoading(false))
-  }, [])
+  }, [page])
 
   const filtered = restaurants.filter((r) =>
     r.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -90,6 +100,9 @@ export default function HomePage() {
             <div>
               <p className="text-brand font-semibold text-xs uppercase mb-1 tracking-wider">Order Now</p>
               <h2 className="font-display font-bold mb-0">Restaurants Near You</h2>
+              <p className="text-gray-500 text-sm mt-1 mb-0">
+                {pagination.totalElements} total restaurants
+              </p>
             </div>
           </div>
 
@@ -118,6 +131,19 @@ export default function HomePage() {
                   <RestaurantCard restaurant={r} />
                 </div>
               ))}
+            </div>
+          )}
+          {pagination.totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-8">
+              <button onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0}
+                className="px-3 py-2 border rounded-lg text-sm cursor-pointer disabled:opacity-50">
+                <i className="bi bi-chevron-left" /> Previous
+              </button>
+              <span className="text-sm font-medium">Page {page + 1} of {Math.max(1, pagination.totalPages)}</span>
+              <button onClick={() => setPage(Math.min(Math.max(1, pagination.totalPages) - 1, page + 1))} disabled={page >= Math.max(1, pagination.totalPages) - 1}
+                className="px-3 py-2 border rounded-lg text-sm cursor-pointer disabled:opacity-50">
+                Next <i className="bi bi-chevron-right" />
+              </button>
             </div>
           )}
         </div>

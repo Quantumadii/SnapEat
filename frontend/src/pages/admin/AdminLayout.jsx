@@ -4,6 +4,7 @@ import useAuthStore from '../../store/useAuthStore'
 
 const NAV_ITEMS = [
   { to: '/admin/dashboard', icon: 'bi-speedometer2',     label: 'Dashboard' },
+  { to: '/admin/branches',  icon: 'bi-diagram-3',        label: 'Branches' },
   { to: '/admin/menu',      icon: 'bi-menu-button-wide', label: 'Menu' },
   { to: '/admin/orders',    icon: 'bi-receipt',          label: 'Orders' },
   { to: '/admin/profile',   icon: 'bi-gear',             label: 'Settings' },

@@ -44,6 +44,7 @@ export default function AdminProfile() {
       payload.append('contactEmail', restForm.contactEmail || '')
       payload.append('contactPhone', restForm.contactPhone || '')
       payload.append('openingHours', restForm.openingHours || '')
+      payload.append('customerCancellationAllowedTill', restForm.customerCancellationAllowedTill || 'PREPARING')
       if (bannerFile) payload.append('imageFile', bannerFile)
 
       await adminAPI.updateRestaurant(restaurantId, payload)
@@ -184,6 +185,22 @@ export default function AdminProfile() {
                 <label className="form-label"><i className="bi bi-clock text-brand mr-1" />Opening Hours</label>
                 <input {...rf('openingHours')} className="form-input" placeholder="10AM – 11PM" />
               </div>
+            </div>
+            <div className="mb-4">
+              <label className="form-label"><i className="bi bi-sliders text-brand mr-1" />Customer Cancellation Allowed Till</label>
+              <select
+                className="form-input"
+                value={restForm.customerCancellationAllowedTill || 'PREPARING'}
+                onChange={(e) => setRestForm({ ...restForm, customerCancellationAllowedTill: e.target.value })}
+              >
+                <option value="PLACED">PLACED</option>
+                <option value="CONFIRMED">CONFIRMED</option>
+                <option value="PREPARING">PREPARING</option>
+                <option value="READY">READY</option>
+              </select>
+              <p className="text-xs text-gray-500 mt-1 mb-0">
+                Customers can cancel when order status is at or before this stage.
+              </p>
             </div>
             <div className="mb-5">
               <label className="form-label">Banner Image</label>

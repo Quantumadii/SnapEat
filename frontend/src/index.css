@@ -179,7 +179,12 @@
   }
   .progress-step.done    { background-color: var(--color-brand); border-color: var(--color-brand); color: white; }
   .progress-step.pending { background: white; border-color: #d1d5db; color: #9ca3af; }
+  .progress-stage { @apply flex flex-col items-center min-w-[88px]; }
+  .progress-stage-label { @apply text-[10px] leading-3 mt-1 text-center font-medium; }
+  .progress-stage-label.done { color: #9a3412; }
+  .progress-stage-label.pending { color: #9ca3af; }
   .progress-line { @apply h-0.5; }
+  .progress-line-offset { margin-top: 16px; }
   .progress-line.done    { background-color: var(--color-brand); }
   .progress-line.pending { @apply bg-gray-200; }
 

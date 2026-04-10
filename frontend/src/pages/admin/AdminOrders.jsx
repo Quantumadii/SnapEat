@@ -15,19 +15,29 @@ export default function AdminOrders() {
   const [orders, setOrders]     = useState([])
   const [filter, setFilter]     = useState('ALL')
   const [loading, setLoading]   = useState(true)
+  const [page, setPage]         = useState(0)
+  const [pagination, setPagination] = useState({ totalPages: 1, totalElements: 0 })
   const [expanded, setExpanded] = useState(null)
   const [updating, setUpdating] = useState(null)
 
   const fetchOrders = () => {
     if (!restaurantId) return
     setLoading(true)
-    adminAPI.getOrders(restaurantId, filter === 'ALL' ? null : filter)
-      .then((r) => setOrders(r.data.data || []))
+    adminAPI.getOrders(restaurantId, filter === 'ALL' ? null : filter, page, 10)
+      .then((r) => {
+        const pageData = r.data.data || {}
+        setOrders(pageData?.content || [])
+        setPagination({
+          totalPages: Number(pageData?.totalPages ?? 1),
+          totalElements: Number(pageData?.totalElements ?? 0),
+        })
+      })
       .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load orders')))
       .finally(() => setLoading(false))
   }
 
-  useEffect(() => { fetchOrders() }, [filter, restaurantId])
+  useEffect(() => { setPage(0) }, [filter])  // Reset to page 0 when filter changes
+  useEffect(() => { fetchOrders() }, [filter, page, restaurantId])
 
   const handleStatus = async (orderId, status) => {
     setUpdating(orderId)
@@ -70,6 +80,7 @@ export default function AdminOrders() {
           <p className="text-gray-500 mt-3">No orders found for this filter</p>
         </div>
       ) : (
+        <>
         <div className="space-y-3">
           {orders.map((order) => (
             <div key={order.id} className="snap-card overflow-hidden">
@@ -82,9 +93,13 @@ export default function AdminOrders() {
                     <span className={STATUS_CSS[order.status]}>{order.status}</span>
                   </div>
                   <p className="font-medium text-sm mb-0">{order.customerName}</p>
+                  <p className="text-gray-500 text-xs mb-0">
+                    <i className="bi bi-shop text-brand mr-1" />
+                    {order.branchName || 'Main branch'}
+                  </p>
                   <p className="text-gray-500 text-xs mb-0">{new Date(order.createdAt).toLocaleString('en-IN')}</p>
                 </div>
-                <div className="text-right flex-shrink-0">
+                <div className="text-right shrink-0">
                   <p className="font-bold text-lg mb-0">₹{order.totalAmount}</p>
                   <p className="text-gray-500 text-xs mb-0">{order.orderItems?.length} item(s)</p>
                 </div>
@@ -113,6 +128,9 @@ export default function AdminOrders() {
                       <p className="text-sm mb-0">
                         <i className="bi bi-geo-alt text-brand mr-1" />{order.deliveryAddress}
                       </p>
+                      <p className="text-sm text-gray-600 mt-2 mb-0">
+                        <i className="bi bi-shop text-brand mr-1" />Branch: {order.branchName || 'Main branch'}
+                      </p>
                       {order.specialInstructions && (
                         <p className="text-sm text-gray-500 italic mt-2 mb-0">"{order.specialInstructions}"</p>
                       )}
@@ -129,7 +147,7 @@ export default function AdminOrders() {
                           : <><i className="bi bi-arrow-right-circle" />{NEXT_LABEL[order.status]}</>}
                       </button>
                     )}
-                    {(order.status === 'PLACED' || order.status === 'CONFIRMED' || order.status === 'PREPARING') && (
+                    {order.status !== 'CANCELLED' && (
                       <button onClick={() => handleStatus(order.id, 'CANCELLED')}
                         disabled={updating === order.id}
                         className="text-sm px-3 py-1.5 border border-red-300 text-red-500 rounded-lg bg-transparent cursor-pointer hover:bg-red-50 transition-colors">
@@ -141,7 +159,19 @@ export default function AdminOrders() {
               )}
             </div>
           ))}
+          <div className="flex justify-center items-center gap-2 mt-6">
+            <button onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0}
+              className="px-3 py-2 border rounded-lg text-sm cursor-pointer disabled:opacity-50">
+              <i className="bi bi-chevron-left" /> Previous
+            </button>
+            <span className="text-sm font-medium">Page {page + 1} of {Math.max(1, pagination.totalPages)}</span>
+            <button onClick={() => setPage(Math.min(Math.max(1, pagination.totalPages) - 1, page + 1))} disabled={page >= Math.max(1, pagination.totalPages) - 1}
+              className="px-3 py-2 border rounded-lg text-sm cursor-pointer disabled:opacity-50">
+              Next <i className="bi bi-chevron-right" />
+            </button>
+          </div>
         </div>
+        </>
       )}
 
     </AdminLayout>

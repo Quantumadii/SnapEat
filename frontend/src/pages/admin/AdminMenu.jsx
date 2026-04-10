@@ -7,7 +7,7 @@ import useAuthStore from '../../store/useAuthStore'
 const CATEGORIES   = ['STARTER','MAIN_COURSE','BEVERAGES','SNACKS','CHINESE','RICE','ADD_ONS']
 const CAT_LABELS   = { STARTER:'Starters', MAIN_COURSE:'Main Course', BEVERAGES:'Beverages', SNACKS:'Snacks', CHINESE:'Chinese', RICE:'Rice', ADD_ONS:'Add Ons' }
 const SPICE_LEVELS = ['MILD','MEDIUM','HOT']
-const EMPTY_FORM   = { name:'', description:'', price:'', category:'STARTER', imageFile:null, available:true, veg:true, spiceLevel:'MILD' }
+const EMPTY_FORM   = { name:'', description:'', price:'', category:'STARTER', branchId:'', imageFile:null, available:true, veg:true, spiceLevel:'MILD' }
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 
@@ -35,31 +35,63 @@ function ToggleSwitch({ checked, onChange, label, activeLabelClass = 'text-gray-
 export default function AdminMenu() {
   const { user }        = useAuthStore()
   const restaurantId    = user?.restaurantId
-  const [items, setItems]         = useState([])
+  const [allItems, setAllItems]   = useState([])
   const [loading, setLoading]     = useState(true)
   const [filterCat, setFilterCat] = useState('ALL')
+  const [page, setPage]           = useState(0)
   const [showModal, setShowModal] = useState(false)
   const [editing, setEditing]     = useState(null)
   const [form, setForm]           = useState(EMPTY_FORM)
   const [saving, setSaving]       = useState(false)
   const [dragActive, setDragActive] = useState(false)
+  const [branches, setBranches]   = useState([])
   const imageInputRef = useRef(null)
 
   const fetchMenu = () => {
     if (!restaurantId) return
-    adminAPI.getAdminMenu(restaurantId)
-      .then((r) => setItems(r.data.data || []))
-      .catch((err) => toast.error(apiErrorMessage(err, 'Failed to load menu')))
-      .finally(() => setLoading(false))
+
+    const fetchAll = async () => {
+      try {
+        const size = 100
+        let currentPage = 0
+        let totalPages = 1
+        const collected = []
+
+        while (currentPage < totalPages) {
+          const r = await adminAPI.getAdminMenu(restaurantId, currentPage, size)
+          const pageData = r.data.data || {}
+          collected.push(...(pageData.content || []))
+          totalPages = Number(pageData.totalPages || 0)
+          currentPage += 1
+        }
+
+        setAllItems(collected)
+      } catch (err) {
+        toast.error(apiErrorMessage(err, 'Failed to load menu'))
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchAll()
   }
 
+  const fetchBranches = () => {
+    if (!restaurantId) return
+    adminAPI.getBranches(restaurantId)
+      .then((r) => setBranches(r.data.data || []))
+      .catch(() => setBranches([]))
+  }
+
+  useEffect(() => { setPage(0) }, [filterCat])  // Reset to page 0 when filter changes
   useEffect(() => { fetchMenu() }, [restaurantId])
+  useEffect(() => { fetchBranches() }, [restaurantId])
 
   const openCreate = () => { setEditing(null); setForm(EMPTY_FORM); setShowModal(true) }
   const openEdit = (item) => {
     setEditing(item)
     setForm({ name: item.name, description: item.description || '', price: item.price,
-      category: item.category, imageFile: null, available: item.available,
+      category: item.category, branchId: item.branchId ? String(item.branchId) : '', imageFile: null, available: item.available,
       veg: item.veg, spiceLevel: item.spiceLevel || 'MILD' })
     setShowModal(true)
   }
@@ -73,6 +105,7 @@ export default function AdminMenu() {
       payload.append('description', form.description || '')
       payload.append('price', String(parseFloat(form.price)))
       payload.append('category', form.category)
+      if (form.branchId) payload.append('branchId', form.branchId)
       payload.append('available', String(form.available))
       payload.append('veg', String(form.veg))
       payload.append('spiceLevel', form.spiceLevel || 'MILD')
@@ -125,7 +158,18 @@ export default function AdminMenu() {
     catch (err) { toast.error(apiErrorMessage(err, 'Failed to toggle')) }
   }
 
-  const displayed = filterCat === 'ALL' ? items : items.filter((i) => i.category === filterCat)
+  const filteredItems = filterCat === 'ALL'
+    ? allItems
+    : allItems.filter((item) => item.category === filterCat)
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / 10))
+  const currentPage = Math.min(page, totalPages - 1)
+  const displayed = filteredItems.slice(currentPage * 10, (currentPage + 1) * 10)
+
+  useEffect(() => {
+    if (page !== currentPage) {
+      setPage(currentPage)
+    }
+  }, [currentPage, page])
 
   return (
     <AdminLayout title="Menu Management">
@@ -133,7 +177,7 @@ export default function AdminMenu() {
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
           <button onClick={() => setFilterCat('ALL')} className={`cat-pill ${filterCat === 'ALL' ? 'active' : ''}`}>
-            All ({items.length})
+            All ({allItems.length})
           </button>
           {CATEGORIES.map((c) => (
             <button key={c} onClick={() => setFilterCat(c)} className={`cat-pill ${filterCat === c ? 'active' : ''}`}>
@@ -158,6 +202,7 @@ export default function AdminMenu() {
           <p className="text-gray-500 mt-3">No items yet. Add your first menu item!</p>
         </div>
       ) : (
+        <>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {displayed.map((item) => (
             <div key={item.id} className={`snap-card overflow-hidden h-full ${!item.available ? 'opacity-50' : ''}`}>
@@ -185,6 +230,13 @@ export default function AdminMenu() {
                     {item.description}
                   </p>
                 )}
+                <div className="mb-2">
+                  {item.shared ? (
+                    <span className="text-xs px-2 py-1 rounded-full bg-green-50 text-green-700">Shared menu item</span>
+                  ) : (
+                    <span className="text-xs px-2 py-1 rounded-full bg-blue-50 text-blue-700">{item.branchName || 'Branch special'}</span>
+                  )}
+                </div>
                 <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
                   <button onClick={() => openEdit(item)} className="flex items-center gap-1 px-2 py-1 border border-gray-300 text-gray-600 rounded-lg text-xs cursor-pointer bg-transparent hover:bg-gray-50 transition-colors">
                     <i className="bi bi-pencil" /> Edit
@@ -202,6 +254,18 @@ export default function AdminMenu() {
             </div>
           ))}
         </div>
+        <div className="flex justify-center items-center gap-2 mt-6">
+          <button onClick={() => setPage(Math.max(0, currentPage - 1))} disabled={currentPage === 0}
+            className="px-3 py-2 border rounded-lg text-sm cursor-pointer disabled:opacity-50">
+            <i className="bi bi-chevron-left" /> Previous
+          </button>
+          <span className="text-sm font-medium">Page {currentPage + 1} of {totalPages}</span>
+          <button onClick={() => setPage(Math.min(totalPages - 1, currentPage + 1))} disabled={currentPage >= totalPages - 1}
+            className="px-3 py-2 border rounded-lg text-sm cursor-pointer disabled:opacity-50">
+            Next <i className="bi bi-chevron-right" />
+          </button>
+        </div>
+        </>
       )}
 
       {/* Modal */}
@@ -234,6 +298,17 @@ export default function AdminMenu() {
                       {CATEGORIES.map((c) => <option key={c} value={c}>{CAT_LABELS[c]}</option>)}
                     </select>
                   </div>
+                </div>
+                <div className="mb-4">
+                  <label className="form-label">Item Scope</label>
+                  <select value={form.branchId} onChange={(e) => setForm({ ...form, branchId: e.target.value })} className="form-select">
+                    <option value="">Shared across all branches</option>
+                    {branches.map((branch) => (
+                      <option key={branch.id} value={branch.id}>
+                        {branch.branchName} - {branch.area}, {branch.city}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="mb-4">
                   <label className="form-label">Description</label>
