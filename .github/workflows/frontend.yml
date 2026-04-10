@@ -2,12 +2,14 @@ name: Deploy Frontend
 on:
   push:
     branches: [ development ] # Runs every time you push to main
+    paths:
+      - 'frontend/**' # Only run if frontend files change
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: development
 
@@ -23,6 +25,6 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "dist/*" # Or "build/*" depending on your React setup
+          source: "frontend/dist/**" # Or "build/*" depending on your React setup
           target: "/var/www/html" # Nginx default folder
-          strip_components: 1
+          strip_components: 2
