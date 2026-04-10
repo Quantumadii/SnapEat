@@ -35,6 +35,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "SnapEat-Backend/target/snapeat-backend.jar"
           target: "/home/ubuntu/snapeat/backend"
+          strip_components: 2
 
       - name: Restart Backend Service
         uses: appleboy/ssh-action@master
