@@ -20,6 +20,8 @@ npm-debug.log*
 .settings/
 .project
 .classpath
+.metadata/
+.factorypath
 
 # --- OS ---
 .DS_Store
