@@ -27,6 +27,6 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "frontend/dist/**" # Or "build/*" depending on your React setup
+          source: "frontend/dist/" # Or "build/*" depending on your React setup
           target: "/var/www/html" # Nginx default folder
           strip_components: 2
