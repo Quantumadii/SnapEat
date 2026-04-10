@@ -30,10 +30,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          # Path to your generated JAR
-          source: "SnapEat-Backend/target/*.jar"
+          source: "SnapEat-Backend/target/snapeat-backend.jar"
           target: "/home/ubuntu/snapeat/backend"
-          strip_components: 2
 
       - name: Restart Backend Service
         uses: appleboy/ssh-action@master
