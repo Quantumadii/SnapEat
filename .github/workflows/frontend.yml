@@ -18,6 +18,8 @@ jobs:
           cd frontend
           npm install
           npm run build
+          echo "Listing files in frontend/dist to verify build:"
+          ls -F dist/
 
       - name: Deploy to EC2
         uses: appleboy/scp-action@master
