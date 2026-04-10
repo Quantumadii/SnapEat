@@ -1,9 +1,9 @@
 name: Deploy Frontend
 on:
   push:
-    branches: [ development ] # Runs every time you push to main
+    branches: [ development ]
     paths:
-      - 'frontend/**' # Only run if frontend files change
+      - 'frontend/**'
 
 jobs:
   deploy:
@@ -18,8 +18,15 @@ jobs:
           cd frontend
           npm install
           npm run build
-          echo "Listing files in frontend/dist to verify build:"
-          ls -F dist/
+          echo "=== Verifying build output ==="
+          pwd
+          ls -la dist/
+
+      - name: Debug paths          # ← add this temporarily
+        run: |
+          echo "Runner PWD: $(pwd)"
+          find . -path ./node_modules -prune -o -name "dist" -print
+          ls -la frontend/dist/
 
       - name: Deploy to EC2
         uses: appleboy/scp-action@master
@@ -27,6 +34,6 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "frontend/dist/" # Or "build/*" depending on your React setup
-          target: "/var/www/html" # Nginx default folder
+          source: "frontend/dist"     # ← no trailing slash, no glob
+          target: "/var/www/html"
           strip_components: 2
