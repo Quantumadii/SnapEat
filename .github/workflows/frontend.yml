@@ -18,15 +18,14 @@ jobs:
           cd frontend
           npm install
           npm run build
-          echo "=== Verifying build output ==="
-          pwd
+          echo "=== Build output ==="
           ls -la dist/
 
-      - name: Debug paths          # ← add this temporarily
+      - name: Prepare dist for SCP
         run: |
-          echo "Runner PWD: $(pwd)"
-          find . -path ./node_modules -prune -o -name "dist" -print
-          ls -la frontend/dist/
+          cp -r frontend/dist ./dist
+          echo "=== Confirming copy ==="
+          ls -la dist/
 
       - name: Deploy to EC2
         uses: appleboy/scp-action@master
@@ -34,6 +33,6 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "frontend/dist"     # ← no trailing slash, no glob
+          source: "dist"              # ← root-level folder, no ambiguity
           target: "/var/www/html"
-          strip_components: 2
+          strip_components: 1
