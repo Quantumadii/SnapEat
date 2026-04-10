@@ -1,64 +1,31 @@
-# Maven 
+# --- Java / Maven ---
 target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.utils_backup
-pom.xml.vsnapshot_backup
-release.properties
-dependency-reduced-pom.xml
-build.log
-修复-mvn-wrapper.jar
-
-# --- Compiled class files ---
 *.class
-*.log
-*.ctxt
 *.jar
 *.war
-*.ear
 *.zip
-*.tar.gz
-*.rar
+.mtl.cache/
 
-# --- Eclipse ---
-.metadata/
+# --- Node / React ---
+node_modules/
+dist/
+dist-ssr/
+npm-debug.log*
+
+# --- IDEs ---
+.idea/
+.vscode/
+*.iml
+*.iws
 .settings/
 .project
 .classpath
-.factorypath
-bin/
-*.launch
-*.tmp
-*.bak
-*.swp
-*~
-.sts4-cache/
 
-# --- IntelliJ IDEA ---
-.idea/
-*.iws
-*.iml
-*.ipr
-out/
-
-# --- Visual Studio Code ---
-.vscode/
-
-# --- Operating System ---
-DS_Store
+# --- OS ---
+.DS_Store
 Thumbs.db
 
-# --- Spring Boot ---
-*.properties.bak
-*.yml.bak
-HELP.md
-active.profile
-
-# --- Spring Secrets ---
-application.properties
+# --- Environment & Secrets ---
 .env
-.env.*
-
-# --- Logging ---
-logs/
-*.log
+.env.local
+*.properties.bak    
