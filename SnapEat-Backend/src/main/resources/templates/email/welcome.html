@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+th:replace="email/layout :: layout(~{::body})">
+
+<body>
+
+<h2 style="margin-top:0;color:#1a1a1a;font-size:20px;">
+Hey <span th:text="${name}"></span>, welcome aboard! 🎉
+</h2>
+
+<p>
+Your <strong th:text="${appName}"></strong> account is ready.
+</p>
+
+<p th:if="${isAdmin}">
+Your restaurant dashboard is ready.
+</p>
+
+<p th:unless="${isAdmin}">
+Browse menus, place orders and track them live.
+</p>
+
+<a th:href="${frontendUrl}"
+style="display:inline-block;margin:18px 0;padding:13px 30px;background:#ff6b35;color:#fff!important;text-decoration:none;border-radius:8px;font-weight:700;font-size:15px;">
+Get Started →
+</a>
+
+</body>
+</html>
