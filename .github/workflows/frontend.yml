@@ -1,20 +1,26 @@
 name: Deploy Frontend
 on:
   push:
-    branches: [ development ] # Runs every time you push to main
+    branches: [ development ]
+    paths:
+      - 'frontend/**'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: development
 
       - name: Install & Build
         run: |
+          cd frontend
           npm install
           npm run build
+
+      - name: Prepare dist for SCP
+        run: cp -r frontend/dist ./dist
 
       - name: Deploy to EC2
         uses: appleboy/scp-action@master
@@ -22,6 +28,6 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "dist/*" # Or "build/*" depending on your React setup
-          target: "/var/www/html" # Nginx default folder
+          source: "dist"
+          target: "/var/www/html"
           strip_components: 1
