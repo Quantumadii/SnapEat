@@ -19,13 +19,13 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Make Maven wrapper executable
-        run: chmod +x SnapEat-Backend/mvnw
+      - name: Verify Maven
+        run: mvn -v
 
       - name: Build with Maven
         run: |
           cd SnapEat-Backend
-          bash ./mvnw clean package -DskipTests
+          mvn clean package -DskipTests
 
       - name: Copy JAR to EC2
         uses: appleboy/scp-action@master
