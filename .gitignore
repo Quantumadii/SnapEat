@@ -1,34 +1,33 @@
-HELP.md
+# --- Java / Maven ---
 target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+*.class
+*.jar
+*.war
+*.zip
+.mtl.cache/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# --- Node / React ---
+node_modules/
+dist/
+dist-ssr/
+npm-debug.log*
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
+# --- IDEs ---
+.idea/
 .vscode/
-/.metadata/
+*.iml
+*.iws
+.settings/
+.project
+.classpath
+.metadata/
+.factorypath
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Environment & Secrets ---
+.env
+.env.local
+*.properties.bak    
