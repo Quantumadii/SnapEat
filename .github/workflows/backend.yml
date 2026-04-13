@@ -2,7 +2,7 @@ name: Deploy Backend
 
 on:
   push:
-    branches: [ development ]
+    branches: [ main ]
     paths:
       - 'SnapEat-Backend/**' # Only triggers if backend code changes
 
