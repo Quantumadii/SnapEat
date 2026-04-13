@@ -380,6 +380,15 @@
     box-shadow: 0 22px 42px rgba(2, 8, 20, 0.36);
   }
 
+  [data-theme='dark'] button:not(:disabled):active,
+  [data-theme='dark'] .btn-outline-brand:not(:disabled):active,
+  [data-theme='dark'] .admin-nav-link:not(:disabled):active,
+  [data-theme='dark'] .cat-pill:not(:disabled):active {
+    background-color: var(--color-brand) !important;
+    border-color: var(--color-brand) !important;
+    color: #ffffff !important;
+  }
+
   .theme-dark .bg-white,
   [data-theme='dark'] .bg-white {
     background-color: var(--surface-bg) !important;
