@@ -380,6 +380,17 @@
     box-shadow: 0 22px 42px rgba(2, 8, 20, 0.36);
   }
 
+  [data-theme='dark'] .progress-stage-label.done,
+  [data-theme='dark'] .progress-stage-label.pending {
+    color: #ffffff;
+  }
+
+  [data-theme='dark'] .progress-step.pending {
+    background: transparent;
+    border-color: #64748b;
+    color: #ffffff;
+  }
+
   [data-theme='dark'] button:not(:disabled):active,
   [data-theme='dark'] .btn-outline-brand:not(:disabled):active,
   [data-theme='dark'] .admin-nav-link:not(:disabled):active,
