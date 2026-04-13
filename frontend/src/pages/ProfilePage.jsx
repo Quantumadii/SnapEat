@@ -109,7 +109,7 @@ export default function ProfilePage() {
             <button
               type="button"
               onClick={() => setActivePanel('delete')}
-              className={`text-left rounded-xl border px-4 py-3 transition-colors ${activePanel === 'delete' ? 'border-red-400 bg-red-50' : 'border-gray-200 hover:border-red-300'}`}
+              className={`text-left rounded-xl border px-4 py-3 transition-colors ${activePanel === 'delete' ? 'border-brand bg-brand-light' : 'border-gray-200 hover:border-brand/50'}`}
             >
               <p className="font-semibold text-sm"><i className="bi bi-trash3 mr-2" />Delete Account</p>
               <p className="text-xs text-gray-500 mt-1">Permanently remove your account data.</p>
@@ -117,7 +117,7 @@ export default function ProfilePage() {
             <button
               type="button"
               onClick={() => setActivePanel('logout')}
-              className={`text-left rounded-xl border px-4 py-3 transition-colors ${activePanel === 'logout' ? 'border-amber-400 bg-amber-50' : 'border-gray-200 hover:border-amber-300'}`}
+              className={`text-left rounded-xl border px-4 py-3 transition-colors ${activePanel === 'logout' ? 'border-brand bg-brand-light' : 'border-gray-200 hover:border-brand/50'}`}
             >
               <p className="font-semibold text-sm"><i className="bi bi-box-arrow-right mr-2" />Sign Out</p>
               <p className="text-xs text-gray-500 mt-1">Log out from your account on this device.</p>
