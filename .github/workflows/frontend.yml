@@ -1,0 +1,55 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [  ]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Deploy frontend on EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "frontend/dist"
+          target: "/tmp/snapeat-dist"
+          strip_components: 2
+
+      - name: Apply permissions and reload Nginx
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo rm -rf /var/www/html/*
+            sudo cp -r /tmp/snapeat-dist/* /var/www/html/
+            sudo chown -R www-data:www-data /var/www/html
+            sudo find /var/www/html -type d -exec chmod 755 {} \;
+            sudo find /var/www/html -type f -exec chmod 644 {} \;
+            sudo nginx -t
+            sudo systemctl reload nginx
