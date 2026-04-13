@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import useAuthStore from '../store/useAuthStore'
 import useCartStore from '../store/useCartStore'
+import ThemeToggle from './ThemeToggle'
 
 export default function Navbar() {
   const { user, logout } = useAuthStore()
@@ -23,6 +24,7 @@ export default function Navbar() {
         </Link>
 
         <div className="flex items-center gap-2 lg:hidden ml-auto mr-2">
+          <ThemeToggle />
           {user?.role !== 'ADMIN' && (
             <Link to="/cart" className="relative text-gray-800 text-xl" onClick={close}>
               <i className="bi bi-bag" />
@@ -34,7 +36,7 @@ export default function Navbar() {
           <i className={`bi ${open ? 'bi-x-lg' : 'bi-list'} text-xl`} />
         </button>
 
-        <div className={`${open ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row items-start lg:items-center gap-1 absolute lg:static top-14 left-0 right-0 bg-white lg:bg-transparent px-4 lg:px-0 py-3 lg:py-0 border-b lg:border-0 shadow-md lg:shadow-none flex-1 z-50`}>
+        <div className={`${open ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row items-start lg:items-center gap-1 absolute lg:static top-14 left-0 right-0 nav-mobile-panel lg:bg-transparent px-4 lg:px-0 py-3 lg:py-0 border-b lg:border-0 shadow-md lg:shadow-none flex-1 z-50`}>
 
           <div className="flex flex-col lg:flex-row gap-1 mr-auto">
             {[
@@ -50,6 +52,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle className="hidden lg:inline-flex" />
 
             {user?.role !== 'ADMIN' && (
               <Link to="/cart" className="relative text-gray-800 text-xl hidden lg:block mr-1" onClick={close}>

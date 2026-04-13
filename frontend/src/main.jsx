@@ -5,6 +5,9 @@ import { Toaster } from 'react-hot-toast'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import './index.css'
 import App from './App.jsx'
+import useThemeStore from './store/useThemeStore'
+
+useThemeStore.getState().initTheme()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,8 +18,9 @@ createRoot(document.getElementById('root')).render(
         toastOptions={{
           duration: 3500,
           style: {
-            background: '#1a1a1a',
-            color: '#fff',
+            background: 'var(--toast-bg)',
+            color: 'var(--toast-text)',
+            border: '1px solid var(--toast-border)',
             borderRadius: '10px',
             fontFamily: 'Plus Jakarta Sans, sans-serif',
             fontSize: '14px',

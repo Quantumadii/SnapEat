@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import useAuthStore from '../../store/useAuthStore'
+import ThemeToggle from '../../components/ThemeToggle'
 
 const NAV_ITEMS = [
   { to: '/admin/dashboard', icon: 'bi-speedometer2',     label: 'Dashboard' },
@@ -77,6 +78,7 @@ export default function AdminLayout({ children, title }) {
             </button>
             <h5 className="font-bold mb-0">{title}</h5>
           </div>
+          <ThemeToggle />
         </header>
         <main className="p-6">{children}</main>
       </div>

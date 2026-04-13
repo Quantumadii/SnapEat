@@ -125,15 +125,15 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen py-10 flex items-center justify-center px-4" style={{ background: 'linear-gradient(135deg,#fff4ee,#fff,#fff4ee)' }}>
+    <div className="auth-page-shell min-h-screen py-10 flex items-center justify-center px-4">
       <div className="w-full max-w-lg">
         <div className="text-center mb-6">
           <Link to="/" className="snap-logo text-3xl">Snap<span>Eat</span></Link>
-          <h5 className="font-bold mt-3 mb-1">Create your account</h5>
-          <p className="text-gray-500 text-sm">Join SnapEat today</p>
+          <h5 className="auth-page-title font-bold mt-3 mb-1">Create your account</h5>
+          <p className="auth-page-subtitle text-sm">Join SnapEat today</p>
         </div>
 
-        <div className="snap-card p-6">
+        <div className="snap-card auth-form-card p-6">
           {step === 'FORM' && (
             <>
           {/* Role tabs */}
