@@ -94,7 +94,7 @@ export default function AdminDashboard() {
               </thead>
               <tbody>
                 {stats.recentOrders.map((o) => (
-                  <tr key={o.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                  <tr key={o.id} className="border-b border-gray-50 hover:bg-transparent transition-colors">
                     <td className="font-bold py-3 pr-4">#{o.id}</td>
                     <td className="pr-4">{o.customerName}</td>
                     <td className="text-gray-500 pr-4">{o.orderItems?.length} item(s)</td>
