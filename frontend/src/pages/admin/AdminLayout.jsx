@@ -71,14 +71,14 @@ export default function AdminLayout({ children, title }) {
       )}
 
       <div className="admin-content">
-        <header className="bg-white border-b border-gray-100 px-6 py-3 flex items-center justify-between sticky top-0 z-20">
+        <header className="bg-white border-b border-gray-100 px-6 py-3 flex items-center sticky top-0 z-20">
           <div className="flex items-center gap-3">
             <button className="lg:hidden border border-gray-200 bg-gray-50 rounded-lg p-1.5 cursor-pointer" onClick={() => setSidebarOpen(true)}>
               <i className="bi bi-list text-xl" />
             </button>
             <h5 className="font-bold mb-0">{title}</h5>
+            <ThemeToggle />
           </div>
-          <ThemeToggle />
         </header>
         <main className="p-6">{children}</main>
       </div>

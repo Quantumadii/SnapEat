@@ -72,7 +72,7 @@ export default function AdminDashboard() {
       <div className="snap-card p-5">
         <div className="flex items-center justify-between mb-4">
           <h6 className="font-bold mb-0">Recent Orders</h6>
-          <button onClick={fetch} className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 rounded-lg text-sm cursor-pointer border-0 hover:bg-gray-200 transition-colors">
+          <button onClick={fetch} className="admin-muted-btn">
             <i className="bi bi-arrow-clockwise" /> Refresh
           </button>
         </div>
