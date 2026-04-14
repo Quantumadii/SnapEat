@@ -386,6 +386,10 @@
     border: 1px solid transparent;
   }
 
+  .about-story-section {
+    background: var(--color-brand-light);
+  }
+
   [data-theme='dark'] .auth-page-shell {
     background:
       radial-gradient(circle at 15% 20%, rgba(255,107,53,0.22) 0%, transparent 40%),
@@ -412,6 +416,10 @@
     color: #111827;
     border-color: #eef0f4;
     box-shadow: 0 22px 42px rgba(2, 8, 20, 0.36);
+  }
+
+  [data-theme='dark'] .about-story-section {
+    background: #000000;
   }
 
   [data-theme='dark'] .progress-stage-label.done,

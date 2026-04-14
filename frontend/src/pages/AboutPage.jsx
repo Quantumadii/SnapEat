@@ -73,7 +73,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="py-12 bg-brand-light">
+      <section className="py-12 about-story-section">
         <div className="max-w-7xl mx-auto px-3 sm:px-4">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="font-display font-bold mb-4">Our Story</h2>
