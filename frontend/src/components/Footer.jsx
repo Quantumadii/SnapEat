@@ -5,7 +5,7 @@ export default function Footer({ restaurant }) {
 
   return (
     <footer className="snap-footer mt-auto py-10">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <div className="snap-logo text-2xl mb-3">
@@ -35,14 +35,14 @@ export default function Footer({ restaurant }) {
             <ul className="list-none p-0 m-0 space-y-3">
               {contactEmail && (
                 <li>
-                  <a href={`mailto:${contactEmail}`} className="text-sm flex items-center gap-2">
+                  <a href={`mailto:${contactEmail}`} className="text-sm flex items-center gap-2 break-all">
                     <i className="bi bi-envelope text-brand" />{contactEmail}
                   </a>
                 </li>
               )}
               {contactPhone && (
                 <li>
-                  <a href={`tel:${contactPhone}`} className="text-sm flex items-center gap-2">
+                  <a href={`tel:${contactPhone}`} className="text-sm flex items-center gap-2 break-all">
                     <i className="bi bi-telephone text-brand" />{contactPhone}
                   </a>
                 </li>
@@ -52,7 +52,7 @@ export default function Footer({ restaurant }) {
                   <a
                     href={instagramUrl.startsWith('http') ? instagramUrl : `https://instagram.com/${instagramUrl.replace('@','')}`}
                     target="_blank" rel="noopener noreferrer"
-                    className="text-sm flex items-center gap-2"
+                    className="text-sm flex items-center gap-2 break-all"
                   >
                     <i className="bi bi-instagram" style={{ color: '#e1306c' }} />
                     {instagramUrl.startsWith('http') ? 'Instagram' : instagramUrl}

@@ -74,7 +74,7 @@ export default function PaymentSuccess() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
-      <div className="flex-1 max-w-3xl mx-auto w-full px-4 py-10">
+      <div className="flex-1 max-w-3xl mx-auto w-full px-3 sm:px-4 py-8 sm:py-10">
         <div className="snap-card p-6 sm:p-8 text-center">
           {loading ? (
             <div className="py-10">

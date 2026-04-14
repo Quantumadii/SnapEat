@@ -41,7 +41,7 @@ export default function AboutPage() {
       <Navbar />
 
       <section className="hero-section py-10">
-        <div className="max-w-7xl mx-auto px-4 relative text-center text-white py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 relative text-center text-white py-8">
           <h1 className="font-display font-bold mb-3" style={{ fontSize: 'clamp(2.2rem,5vw,3.5rem)' }}>
             About <span className="text-brand">SnapEat</span>
           </h1>
@@ -58,7 +58,7 @@ export default function AboutPage() {
       </section>
 
       <section className="py-12">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {VALUES.map((v) => (
               <div key={v.title} className="snap-card p-6 text-center">
@@ -66,23 +66,23 @@ export default function AboutPage() {
                   <i className={`bi ${v.icon} text-brand text-xl`} />
                 </div>
                 <h6 className="font-bold mb-2">{v.title}</h6>
-                <p className="text-gray-500 text-sm mb-0">{v.desc}</p>
+                <p className="text-sm mb-0" style={{ color: 'var(--text-secondary)' }}>{v.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-12 bg-[#fff4ee]">
-        <div className="max-w-7xl mx-auto px-4">
+      <section className="py-12 bg-brand-light">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="font-display font-bold mb-4">Our Story</h2>
-            <p className="text-gray-500 mb-3" style={{ lineHeight: 1.8 }}>
+            <p className="mb-3" style={{ lineHeight: 1.8, color: 'var(--text-secondary)' }}>
               SnapEat was built to help local restaurants go digital and connect with more customers.
               We saw small and mid-sized restaurants struggling to reach customers online, so we built
               a simple, powerful solution.
             </p>
-            <p className="text-gray-500 mb-0" style={{ lineHeight: 1.8 }}>
+            <p className="mb-0" style={{ lineHeight: 1.8, color: 'var(--text-secondary)' }}>
               Today, restaurants on SnapEat manage menus, track orders, and grow their business while
               customers enjoy seamless ordering with real-time updates at every stage.
             </p>
@@ -91,7 +91,7 @@ export default function AboutPage() {
       </section>
 
       <section className="py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {[
               { value: stats.ordersDelivered.toLocaleString('en-IN'), label: 'Orders Delivered' },
@@ -101,7 +101,7 @@ export default function AboutPage() {
             ].map((s) => (
               <div key={s.label}>
                 <h2 className="font-display font-bold text-brand mb-1">{s.value}</h2>
-                <p className="text-gray-500 text-sm mb-0">{s.label}</p>
+                <p className="text-sm mb-0" style={{ color: 'var(--text-secondary)' }}>{s.label}</p>
               </div>
             ))}
           </div>

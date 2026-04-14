@@ -28,7 +28,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="auth-page-shell min-h-screen flex items-center justify-center px-4">
+    <div className="auth-page-shell min-h-screen flex items-center justify-center px-3 sm:px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
           <Link to="/" className="snap-logo text-3xl">Snap<span>Eat</span></Link>
@@ -36,7 +36,7 @@ export default function LoginPage() {
           <p className="auth-page-subtitle text-sm">Sign in to your account</p>
         </div>
 
-        <div className="snap-card auth-form-card p-6">
+        <div className="snap-card auth-form-card p-4 sm:p-6">
           <form onSubmit={submit}>
             <div className="mb-4">
               <label className="form-label">Email Address</label>

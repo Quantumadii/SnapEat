@@ -125,7 +125,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="auth-page-shell min-h-screen py-10 flex items-center justify-center px-4">
+    <div className="auth-page-shell min-h-screen py-6 sm:py-10 flex items-center justify-center px-3 sm:px-4">
       <div className="w-full max-w-lg">
         <div className="text-center mb-6">
           <Link to="/" className="snap-logo text-3xl">Snap<span>Eat</span></Link>
@@ -133,7 +133,7 @@ export default function RegisterPage() {
           <p className="auth-page-subtitle text-sm">Join SnapEat today</p>
         </div>
 
-        <div className="snap-card auth-form-card p-6">
+        <div className="snap-card auth-form-card p-4 sm:p-6">
           {step === 'FORM' && (
             <>
           {/* Role tabs */}
@@ -185,7 +185,7 @@ export default function RegisterPage() {
                   <textarea name="restaurantDescription" className="form-textarea" style={{ padding: '6px 12px', fontSize: '0.875rem' }} rows={2}
                     value={form.restaurantDescription} onChange={handle} placeholder="Short description..." />
                   <input name="restaurantAddress" className="form-input-sm" value={form.restaurantAddress} onChange={handle} placeholder="Full Address" />
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <input name="restaurantArea" className="form-input-sm" value={form.restaurantArea} onChange={handle} placeholder="Area / Locality *" required={role === 'ADMIN'} />
                     <input name="restaurantCity" className="form-input-sm" value={form.restaurantCity} onChange={handle} placeholder="City *" required={role === 'ADMIN'} />
                   </div>
@@ -216,7 +216,7 @@ export default function RegisterPage() {
                 </p>
               </div>
 
-              <div className="flex items-center justify-center gap-2 mb-4" onPaste={handleOtpPaste}>
+              <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-4" onPaste={handleOtpPaste}>
                 {otp.map((digit, index) => (
                   <input
                     key={index}
@@ -227,7 +227,7 @@ export default function RegisterPage() {
                     value={digit}
                     onChange={(e) => handleOtpChange(index, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                    className="w-11 h-12 text-center text-lg font-bold border border-gray-300 rounded-lg focus:border-brand focus:outline-none"
+                    className="w-10 sm:w-11 h-11 sm:h-12 text-center text-lg font-bold border border-gray-300 rounded-lg focus:border-brand focus:outline-none"
                     aria-label={`OTP digit ${index + 1}`}
                     required
                   />

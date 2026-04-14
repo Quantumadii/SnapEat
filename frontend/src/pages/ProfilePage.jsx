@@ -77,7 +77,7 @@ export default function ProfilePage() {
             </div>
             <div>
               <h5 className="font-bold mb-0">{user?.fullName}</h5>
-              <p className="text-gray-500 text-sm mb-1">{user?.email}</p>
+              <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>{user?.email}</p>
               <span className={`text-xs font-semibold px-2 py-0.5 rounded-full text-white ${user?.role === 'ADMIN' ? 'bg-blue-500' : 'bg-green-500'}`}>
                 {user?.role}
               </span>
@@ -85,18 +85,18 @@ export default function ProfilePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="rounded-xl p-3 bg-gray-50">
-              <p className="text-gray-500 text-xs mb-1">Full Name</p>
+              <p className="text-xs mb-1" style={{ color: 'var(--text-secondary)' }}>Full Name</p>
               <p className="font-semibold text-sm mb-0">{user?.fullName}</p>
             </div>
             <div className="rounded-xl p-3 bg-gray-50">
-              <p className="text-gray-500 text-xs mb-1">Email</p>
+              <p className="text-xs mb-1" style={{ color: 'var(--text-secondary)' }}>Email</p>
               <p className="font-semibold text-sm mb-0 truncate">{user?.email}</p>
             </div>
           </div>
         </div>
 
         <div className="snap-card p-4 mb-4">
-          <p className="text-xs uppercase tracking-wide text-gray-500 mb-3">Actions</p>
+          <p className="text-xs uppercase tracking-wide mb-3" style={{ color: 'var(--text-secondary)' }}>Actions</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button
               type="button"
@@ -104,7 +104,7 @@ export default function ProfilePage() {
               className={`text-left rounded-xl border px-4 py-3 transition-colors ${activePanel === 'password' ? 'border-brand bg-brand-light' : 'border-gray-200 hover:border-brand/50'}`}
             >
               <p className="font-semibold text-sm"><i className="bi bi-shield-lock mr-2" />Change Password</p>
-              <p className="text-xs text-gray-500 mt-1">Secure your account with a new password.</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>Secure your account with a new password.</p>
             </button>
             <button
               type="button"
@@ -112,7 +112,7 @@ export default function ProfilePage() {
               className={`text-left rounded-xl border px-4 py-3 transition-colors ${activePanel === 'delete' ? 'border-brand bg-brand-light' : 'border-gray-200 hover:border-brand/50'}`}
             >
               <p className="font-semibold text-sm"><i className="bi bi-trash3 mr-2" />Delete Account</p>
-              <p className="text-xs text-gray-500 mt-1">Permanently remove your account data.</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>Permanently remove your account data.</p>
             </button>
             <button
               type="button"
@@ -120,7 +120,7 @@ export default function ProfilePage() {
               className={`text-left rounded-xl border px-4 py-3 transition-colors ${activePanel === 'logout' ? 'border-brand bg-brand-light' : 'border-gray-200 hover:border-brand/50'}`}
             >
               <p className="font-semibold text-sm"><i className="bi bi-box-arrow-right mr-2" />Sign Out</p>
-              <p className="text-xs text-gray-500 mt-1">Log out from your account on this device.</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>Log out from your account on this device.</p>
             </button>
           </div>
         </div>
@@ -163,7 +163,7 @@ export default function ProfilePage() {
         {activePanel === 'delete' && (
         <div className="snap-card p-6">
           <h6 className="font-bold mb-1">Account</h6>
-          <p className="text-gray-500 text-sm mb-3">Permanently delete your account</p>
+          <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>Permanently delete your account</p>
           <div className="flex flex-wrap gap-2">
             <button onClick={deleteAccount} disabled={deleting} className="flex items-center gap-2 px-4 py-2 border border-red-500 text-white rounded-lg bg-red-500 cursor-pointer hover:bg-red-600 transition-colors text-sm font-medium disabled:opacity-60 disabled:cursor-not-allowed">
               {deleting ? <><span className="spinner" />Deleting...</> : <><i className="bi bi-trash3" />Delete Account</>}
@@ -178,7 +178,7 @@ export default function ProfilePage() {
         {activePanel === 'logout' && (
         <div className="snap-card p-6">
           <h6 className="font-bold mb-1">Sign Out</h6>
-          <p className="text-gray-500 text-sm mb-3">You will be logged out and redirected to home.</p>
+          <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>You will be logged out and redirected to home.</p>
           <button
             onClick={signOut}
             disabled={signingOut}
@@ -190,7 +190,7 @@ export default function ProfilePage() {
         )}
 
         {!activePanel && (
-          <div className="text-center text-sm text-gray-500 py-4">Select an action above to continue.</div>
+          <div className="text-center text-sm py-4" style={{ color: 'var(--text-secondary)' }}>Select an action above to continue.</div>
         )}
       </div>
 

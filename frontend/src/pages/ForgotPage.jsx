@@ -115,14 +115,14 @@ export function ResetPage() {
 
 function AuthCard({ title, subtitle, children }) {
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'linear-gradient(135deg,#fff4ee,#fff,#fff4ee)' }}>
+    <div className="auth-page-shell min-h-screen flex items-center justify-center px-3 sm:px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
           <Link to="/" className="snap-logo text-3xl">Snap<span>Eat</span></Link>
           <h5 className="font-bold mt-3 mb-1">{title}</h5>
           <p className="text-gray-500 text-sm">{subtitle}</p>
         </div>
-        <div className="snap-card p-6">{children}</div>
+        <div className="snap-card auth-form-card p-4 sm:p-6">{children}</div>
       </div>
     </div>
   )

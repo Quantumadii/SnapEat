@@ -116,7 +116,7 @@ export default function AdminProfile() {
     <AdminLayout title="Settings">
       <div className="max-w-xl">
         <div className="snap-card p-4 mb-6">
-          <p className="text-xs uppercase tracking-wide text-gray-500 mb-3">Quick Actions</p>
+          <p className="text-xs uppercase tracking-wide mb-3" style={{ color: 'var(--text-secondary)' }}>Quick Actions</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <button
               type="button"
@@ -124,7 +124,7 @@ export default function AdminProfile() {
               className={`text-left rounded-xl border px-4 py-3 transition-colors ${activePanel === 'restaurant' ? 'border-brand bg-brand-light' : 'border-gray-200 hover:border-brand/50'}`}
             >
               <p className="font-semibold text-sm"><i className="bi bi-pencil-square mr-2" />Edit Restaurant Profile</p>
-              <p className="text-xs text-gray-500 mt-1">Update contact details, hours, and banner.</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>Update contact details, hours, and banner.</p>
             </button>
             <button
               type="button"
@@ -132,7 +132,7 @@ export default function AdminProfile() {
               className={`text-left rounded-xl border px-4 py-3 transition-colors ${activePanel === 'password' ? 'border-brand bg-brand-light' : 'border-gray-200 hover:border-brand/50'}`}
             >
               <p className="font-semibold text-sm"><i className="bi bi-shield-lock mr-2" />Change Password</p>
-              <p className="text-xs text-gray-500 mt-1">Secure your account with a new password.</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>Secure your account with a new password.</p>
             </button>
           </div>
         </div>
@@ -176,7 +176,7 @@ export default function AdminProfile() {
                 <input {...rf('contactEmail')} type="email" className="form-input" placeholder="contact@email.com" />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="form-label"><i className="bi bi-instagram text-brand mr-1" />Instagram</label>
                 <input {...rf('instagramUrl')} className="form-input" placeholder="@handle or URL" />
@@ -198,7 +198,7 @@ export default function AdminProfile() {
                 <option value="PREPARING">PREPARING</option>
                 <option value="READY">READY</option>
               </select>
-              <p className="text-xs text-gray-500 mt-1 mb-0">
+              <p className="text-xs mt-1 mb-0" style={{ color: 'var(--text-secondary)' }}>
                 Customers can cancel when order status is at or before this stage.
               </p>
             </div>
@@ -218,7 +218,7 @@ export default function AdminProfile() {
                 className={`rounded-xl border-2 border-dashed p-4 text-center ${dragActive ? 'border-brand bg-brand-light' : 'border-gray-300 bg-gray-50'}`}
               >
                 <p className="text-sm font-medium">Drag and drop banner image here</p>
-                <p className="text-xs text-gray-500 mt-1">JPG, PNG, WEBP up to 2MB</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>JPG, PNG, WEBP up to 2MB</p>
                 <button
                   type="button"
                   onClick={() => bannerInputRef.current?.click()}
@@ -231,7 +231,7 @@ export default function AdminProfile() {
                 )}
               </div>
               {restForm.imageUrl && !bannerFile && (
-                <p className="text-xs text-gray-500 mt-2">Current banner will be kept unless you upload a new one.</p>
+                <p className="text-xs mt-2" style={{ color: 'var(--text-secondary)' }}>Current banner will be kept unless you upload a new one.</p>
               )}
             </div>
             <button type="submit" className="btn-brand gap-2" disabled={savingRest}>
@@ -278,7 +278,7 @@ export default function AdminProfile() {
 
         <div className="snap-card p-6 mt-6">
           <h6 className="font-bold mb-1">Account</h6>
-          <p className="text-gray-500 text-sm mb-3">Permanently delete your account</p>
+          <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>Permanently delete your account</p>
           <div className="flex flex-wrap gap-2">
             <button onClick={handleDeleteAccount} disabled={deletingAccount} className="flex items-center gap-2 px-4 py-2 border border-red-500 text-white rounded-lg bg-red-500 cursor-pointer hover:bg-red-600 transition-colors text-sm font-medium disabled:opacity-60 disabled:cursor-not-allowed">
               {deletingAccount ? <><span className="spinner" />Deleting...</> : <><i className="bi bi-trash3" />Delete Account</>}

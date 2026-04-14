@@ -53,9 +53,9 @@ export default function AdminOrders() {
     <AdminLayout title="Order Management">
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 overflow-x-auto pb-1 w-full lg:w-auto" style={{ scrollbarWidth: 'none' }}>
           {STATUSES.map((s) => (
-            <button key={s} onClick={() => setFilter(s)} className={`cat-pill ${filter === s ? 'active' : ''}`}>
+            <button key={s} onClick={() => setFilter(s)} className={`cat-pill shrink-0 ${filter === s ? 'active' : ''}`}>
               {s === 'ALL' ? 'All Orders' : s}
             </button>
           ))}
@@ -159,7 +159,7 @@ export default function AdminOrders() {
               )}
             </div>
           ))}
-          <div className="flex justify-center items-center gap-2 mt-6">
+          <div className="flex flex-wrap justify-center items-center gap-2 mt-6">
             <button onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0}
               className="px-3 py-2 border rounded-lg text-sm cursor-pointer disabled:opacity-50">
               <i className="bi bi-chevron-left" /> Previous

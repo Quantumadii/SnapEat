@@ -37,7 +37,7 @@ export default function ContactPage() {
       <Navbar />
 
       <section className="hero-section py-10">
-        <div className="max-w-7xl mx-auto px-4 relative text-center text-white py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 relative text-center text-white py-8">
           <h1 className="font-display font-bold mb-3" style={{ fontSize: 'clamp(2.2rem,5vw,3.5rem)' }}>
             Contact <span className="text-brand">Us</span>
           </h1>
@@ -53,12 +53,12 @@ export default function ContactPage() {
       </section>
 
       <section className="py-12 flex-1">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
             <div>
               <h4 className="font-bold mb-2">Get in touch</h4>
-              <p className="text-gray-500 text-sm mb-6" style={{ lineHeight: 1.7 }}>
+              <p className="text-sm mb-6" style={{ lineHeight: 1.7, color: 'var(--text-secondary)' }}>
                 Have a question, feedback, or want to list your restaurant? We're here to help.
               </p>
               <div className="space-y-4">
@@ -68,11 +68,11 @@ export default function ContactPage() {
                       <i className={`bi ${c.icon} text-brand`} />
                     </div>
                     <div>
-                      <p className="text-gray-500 text-xs mb-0">{c.label}</p>
+                      <p className="text-xs mb-0" style={{ color: 'var(--text-secondary)' }}>{c.label}</p>
                       {c.href ? (
-                        <a href={c.href} className="font-semibold text-sm text-gray-800 no-underline">{c.value}</a>
+                        <a href={c.href} className="font-semibold text-sm no-underline" style={{ color: 'var(--text-primary)' }}>{c.value}</a>
                       ) : (
-                        <p className="font-semibold text-sm mb-0">{c.value}</p>
+                        <p className="font-semibold text-sm mb-0" style={{ color: 'var(--text-primary)' }}>{c.value}</p>
                       )}
                     </div>
                   </div>
@@ -81,12 +81,12 @@ export default function ContactPage() {
             </div>
 
             <div className="lg:col-span-2">
-              <div className="snap-card p-6">
+              <div className="snap-card p-4 sm:p-6">
                 {sent ? (
                   <div className="text-center py-10">
                     <i className="bi bi-send-check-fill text-green-500" style={{ fontSize: '3.5rem' }} />
                     <h5 className="font-bold mt-3 mb-2">Message Sent!</h5>
-                    <p className="text-gray-500 mb-0">We'll get back to you within 24 hours.</p>
+                    <p className="mb-0" style={{ color: 'var(--text-secondary)' }}>We'll get back to you within 24 hours.</p>
                   </div>
                 ) : (
                   <form onSubmit={submit}>
