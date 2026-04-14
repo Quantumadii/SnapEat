@@ -43,7 +43,7 @@ export default function AdminDashboard() {
     <AdminLayout title="Dashboard">
 
       {loading ? (
-        <div className="grid grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
           {[1,2,3,4,5,6].map((i) => (
             <div key={i} className="snap-card p-5 h-24 animate-pulse">
               <div className="bg-gray-200 rounded h-3 w-1/2 mb-2" />
@@ -52,7 +52,7 @@ export default function AdminDashboard() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
           {STAT_CARDS.map((s) => (
             <div key={s.label} className="snap-card p-4 flex items-center gap-4">
               <div className="w-13 h-13 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -83,7 +83,7 @@ export default function AdminDashboard() {
             <p className="text-gray-500 mt-2 mb-0">No orders yet</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="table-mobile-scroll">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100">

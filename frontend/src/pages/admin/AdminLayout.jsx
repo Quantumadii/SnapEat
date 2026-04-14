@@ -71,8 +71,8 @@ export default function AdminLayout({ children, title }) {
       )}
 
       <div className="admin-content">
-        <header className="bg-white border-b border-gray-100 px-6 py-3 flex items-center sticky top-0 z-20">
-          <div className="flex items-center gap-3">
+        <header className="bg-white border-b border-gray-100 px-3 sm:px-6 py-3 flex items-center sticky top-0 z-20">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <button className="lg:hidden border border-gray-200 bg-gray-50 rounded-lg p-1.5 cursor-pointer" onClick={() => setSidebarOpen(true)}>
               <i className="bi bi-list text-xl" />
             </button>
@@ -80,7 +80,7 @@ export default function AdminLayout({ children, title }) {
             <ThemeToggle />
           </div>
         </header>
-        <main className="p-6">{children}</main>
+        <main className="p-3 sm:p-6">{children}</main>
       </div>
     </div>
   )

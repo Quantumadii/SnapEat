@@ -105,7 +105,7 @@ export default function OrdersPage() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
-      <div className="max-w-2xl mx-auto w-full px-4 py-8 flex-1">
+      <div className="max-w-2xl mx-auto w-full px-3 sm:px-4 py-6 sm:py-8 flex-1">
         <h3 className="font-bold mb-6">My Orders</h3>
 
         {loading ? (
@@ -136,7 +136,7 @@ export default function OrdersPage() {
                 <div key={order.id} className="snap-card p-6 fade-up"> */}
                   {/* Header */}
               return (
-                <div key={order.id} className="snap-card p-6 fade-up">
+                <div key={order.id} className="snap-card p-4 sm:p-6 fade-up">
                   <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
                     <div>
                       <p className="text-gray-500 text-xs mb-0">Order #{order.id}</p>
@@ -199,7 +199,7 @@ export default function OrdersPage() {
                 </div>
               )
             })}
-            <div className="flex justify-center items-center gap-2 mt-6">
+            <div className="flex flex-wrap justify-center items-center gap-2 mt-6">
               <button onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0}
                 className="px-3 py-2 border rounded-lg text-sm cursor-pointer disabled:opacity-50">
                 <i className="bi bi-chevron-left" /> Previous
@@ -298,7 +298,8 @@ function OrderProgress({ status }) {
   )
   const current = STEPS.indexOf(status)
   return (
-    <div className="flex items-start gap-0.5">
+    <div className="progress-wrap">
+      <div className="flex items-start gap-0.5">
       {STEPS.map((step, i) => (
         <div key={step} className="flex items-start flex-1">
           <div className="progress-stage">
@@ -314,6 +315,7 @@ function OrderProgress({ status }) {
           )}
         </div>
       ))}
+      </div>
     </div>
   )
 }

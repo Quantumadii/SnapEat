@@ -108,7 +108,7 @@ export default function CartPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8 flex-1 w-full">
         <h3 className="font-bold mb-1">Your Cart</h3>
         <p className="text-gray-500 mb-6 text-sm"><i className="bi bi-shop text-brand mr-1" />{restaurantName}{branchName ? ` · ${branchName}` : ''}</p>
 
@@ -116,7 +116,7 @@ export default function CartPage() {
 
           <div className="lg:col-span-2 space-y-3">
             {items.map((item) => (
-              <div key={item.id} className="snap-card p-3 flex items-center gap-3">
+              <div key={item.id} className="snap-card p-3 flex flex-col sm:flex-row items-start sm:items-center gap-3">
                 {item.imageUrl ? (
                   <img src={item.imageUrl} alt={item.name} className="rounded-xl shrink-0 object-cover" style={{ width: 72, height: 72 }} />
                 ) : (
@@ -126,7 +126,7 @@ export default function CartPage() {
                   <h6 className="font-semibold mb-0 truncate">{item.name}</h6>
                   <span className="text-brand font-bold">₹{item.price}</span>
                 </div>
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="flex w-full sm:w-auto items-center justify-between sm:justify-start gap-3 shrink-0">
                   <div className="qty-ctrl">
                     <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>
                       <i className="bi bi-dash" />
@@ -153,7 +153,7 @@ export default function CartPage() {
               <div className="space-y-2">
                 <input name="flatNo"       className="form-input-sm" value={form.flatNo}       onChange={handle} placeholder="Flat / House No. *" />
                 <input name="deliveryArea" className="form-input-sm" value={form.deliveryArea} onChange={handle} placeholder="Area / Locality *" />
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <input name="deliveryCity" className="form-input-sm" value={form.deliveryCity} onChange={handle} placeholder="City *" />
                   <input name="pincode"      className="form-input-sm" value={form.pincode}      onChange={handle} placeholder="Pincode *" />
                 </div>
@@ -178,7 +178,7 @@ export default function CartPage() {
 
               <div className="mt-3">
                 <p className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">Payment Method</p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => setPaymentMethod('COD')}

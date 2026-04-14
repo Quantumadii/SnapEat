@@ -285,7 +285,7 @@ export default function AdminMenu() {
                   <input value={form.name} onChange={(e) => setForm({...form, name: e.target.value})}
                     className="form-input" required placeholder="e.g. Butter Chicken" />
                 </div>
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="form-label">Price (₹) *</label>
                     <input type="number" min="1" step="0.01" value={form.price}
@@ -348,7 +348,7 @@ export default function AdminMenu() {
                     <p className="text-xs text-gray-500 mt-2">Current image will be kept unless you upload a new one.</p>
                   )}
                 </div>
-                <div className="grid grid-cols-2 gap-4 mb-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2">
                   <div>
                     <label className="form-label">Spice Level</label>
                     <select value={form.spiceLevel} onChange={(e) => setForm({...form, spiceLevel: e.target.value})} className="form-select">

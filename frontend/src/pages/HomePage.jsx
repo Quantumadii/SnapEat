@@ -53,7 +53,7 @@ export default function HomePage() {
               Order from your favourite restaurant and track your meal in real time.
             </p>
 
-            <div className="flex bg-white rounded-xl p-2 shadow-xl max-w-lg mx-auto">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 bg-white rounded-xl p-2 shadow-xl max-w-lg mx-auto">
               <i className="bi bi-search  text-gray-400 mx-2 self-center" />
               <input
                 type="text"
@@ -62,7 +62,7 @@ export default function HomePage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <button className="btn-brand px-5 py-2 text-sm rounded-lg">Search</button>
+              <button className="btn-brand w-full sm:w-auto px-5 py-2 text-sm rounded-lg">Search</button>
             </div>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function HomePage() {
 
       <section className="bg-white border-b py-4">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-center gap-6">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
             {[
               { icon: 'bi-lightning-fill', label: 'Fast Delivery',  desc: 'Hot food at your door' },
               { icon: 'bi-stars',          label: 'Fresh & Tasty',  desc: 'Made fresh every order' },
@@ -96,7 +96,7 @@ export default function HomePage() {
       </section>
       <section className="py-12 flex-1">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-end justify-between mb-6">
+          <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
             <div>
               <p className="text-brand font-semibold text-xs uppercase mb-1 tracking-wider">Order Now</p>
               <h2 className="font-display font-bold mb-0">Restaurants Near You</h2>
@@ -134,7 +134,7 @@ export default function HomePage() {
             </div>
           )}
           {pagination.totalPages > 1 && (
-            <div className="flex justify-center items-center gap-2 mt-8">
+            <div className="flex flex-wrap justify-center items-center gap-2 mt-8">
               <button onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0}
                 className="px-3 py-2 border rounded-lg text-sm cursor-pointer disabled:opacity-50">
                 <i className="bi bi-chevron-left" /> Previous
@@ -158,8 +158,6 @@ function RestaurantCard({ restaurant: r }) {
   const resolvedRating = Number(r?.avgRating ?? r?.averageRating)
   const hasRating = Number.isFinite(resolvedRating) && resolvedRating > 0
   const ratingLabel = hasRating ? resolvedRating.toFixed(1) : 'New'
-
-  console.log(r.name, r.avgRating, r.averageRating);
 
   return (
     <Link to={`/restaurant/${r.id}`} className="no-underline">

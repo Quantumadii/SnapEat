@@ -303,7 +303,7 @@ export default function AdminBranches() {
                   <label className="form-label">Branch Name *</label>
                   <input value={form.branchName} onChange={(e) => setForm({ ...form, branchName: e.target.value })} className="form-input" required placeholder="e.g. Downtown Branch" />
                 </div>
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="form-label">Area *</label>
                     <input value={form.area} onChange={(e) => setForm({ ...form, area: e.target.value })} className="form-input" required placeholder="Area / locality" />
@@ -317,7 +317,7 @@ export default function AdminBranches() {
                   <label className="form-label">Address</label>
                   <textarea rows={2} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="form-textarea" placeholder="Full branch address..." />
                 </div>
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="form-label">Contact Phone</label>
                     <input value={form.contactPhone} onChange={(e) => setForm({ ...form, contactPhone: e.target.value })} className="form-input" placeholder="Phone number" />
@@ -357,7 +357,7 @@ export default function AdminBranches() {
                     )}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 mb-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2">
                   <div className="flex flex-col justify-end gap-2 pb-1">
                     <ToggleSwitch checked={form.active} onChange={(value) => setForm({ ...form, active: value })} label="Active" activeLabelClass="text-brand" />
                   </div>

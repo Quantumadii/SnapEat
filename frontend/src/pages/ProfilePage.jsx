@@ -66,12 +66,12 @@ export default function ProfilePage() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
-      <div className="max-w-xl mx-auto w-full px-4 py-8 flex-1">
+      <div className="max-w-xl mx-auto w-full px-3 sm:px-4 py-6 sm:py-8 flex-1">
         <h3 className="font-bold mb-6">My Profile</h3>
 
         {/* Profile card */}
-        <div className="snap-card p-6 mb-4">
-          <div className="flex items-center gap-4 mb-6">
+        <div className="snap-card p-4 sm:p-6 mb-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
             <div className="w-16 h-16 rounded-2xl bg-brand flex items-center justify-center flex-shrink-0">
               <span className="text-white font-bold text-2xl">{user?.fullName?.[0]}</span>
             </div>
@@ -83,7 +83,7 @@ export default function ProfilePage() {
               </span>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="rounded-xl p-3 bg-gray-50">
               <p className="text-gray-500 text-xs mb-1">Full Name</p>
               <p className="font-semibold text-sm mb-0">{user?.fullName}</p>

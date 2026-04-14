@@ -156,7 +156,7 @@ export default function AdminProfile() {
               <label className="form-label">Full Address</label>
               <input {...rf('address')} className="form-input" placeholder="Full address" />
             </div>
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="form-label"><i className="bi bi-geo-alt text-brand mr-1" />Area *</label>
                 <input {...rf('area')} className="form-input" required placeholder="Area / Locality" />
@@ -166,7 +166,7 @@ export default function AdminProfile() {
                 <input {...rf('city')} className="form-input" required placeholder="City" />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="form-label"><i className="bi bi-telephone text-brand mr-1" />Contact Phone</label>
                 <input {...rf('contactPhone')} className="form-input" placeholder="+91 98765 43210" />

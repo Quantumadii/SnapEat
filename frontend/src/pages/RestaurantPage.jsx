@@ -229,7 +229,7 @@ export default function RestaurantPage() {
 
       {/* Sticky category bar */}
       <div className="bg-white border-b sticky top-14 z-30">
-        <div className="max-w-7xl mx-auto px-4 py-2">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2">
           <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
             {CATEGORIES.map((cat) => (
               <button key={String(cat.value)} onClick={() => { setActiveCategory(cat.value); setMenuPage(0) }}
@@ -237,7 +237,7 @@ export default function RestaurantPage() {
                 {cat.label}
               </button>
             ))}
-            <div className="ml-auto pl-2 border-l flex items-center shrink-0">
+            <div className="pl-2 border-l flex items-center shrink-0">
               <button onClick={() => setVegOnly(!vegOnly)}
                 className={`cat-pill flex items-center gap-1 ${vegOnly ? 'active' : ''}`}>
                 <i className="bi bi-leaf" /> Veg Only
@@ -248,7 +248,7 @@ export default function RestaurantPage() {
       </div>
 
       {/* Menu grid */}
-      <div className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8 flex-1 w-full">
         {menuLoading && (
           <div className="text-center mb-4">
             <div className="inline-block w-7 h-7 border-4 border-brand border-t-transparent rounded-full animate-spin" />
@@ -275,7 +275,7 @@ export default function RestaurantPage() {
         )}
 
         {menuTotalPages > 1 && (
-          <div className="flex justify-center items-center gap-2 mt-8">
+          <div className="flex flex-wrap justify-center items-center gap-2 mt-8">
             <button
               onClick={() => setMenuPage((prev) => Math.max(prev - 1, 0))}
               disabled={currentPage === 0}

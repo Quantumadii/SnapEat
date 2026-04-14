@@ -17,7 +17,7 @@ export default function Navbar() {
 
   return (
     <nav className="snap-nav sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 flex items-center h-14 gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 flex items-center h-14 gap-2 sm:gap-4">
 
         <Link to="/" className="snap-logo text-xl mr-4" onClick={close}>
           Snap<span>Eat</span>
@@ -36,7 +36,7 @@ export default function Navbar() {
           <i className={`bi ${open ? 'bi-x-lg' : 'bi-list'} text-xl`} />
         </button>
 
-        <div className={`${open ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row items-start lg:items-center gap-1 absolute lg:static top-14 left-0 right-0 nav-mobile-panel lg:bg-transparent px-4 lg:px-0 py-3 lg:py-0 border-b lg:border-0 shadow-md lg:shadow-none flex-1 z-50`}>
+        <div className={`${open ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row items-start lg:items-center gap-1 absolute lg:static top-14 left-0 right-0 nav-mobile-panel lg:bg-transparent px-3 sm:px-4 lg:px-0 py-3 lg:py-0 border-b lg:border-0 shadow-md lg:shadow-none flex-1 z-50`}>
 
           <div className="flex flex-col lg:flex-row gap-1 mr-auto">
             {[
@@ -51,7 +51,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex w-full lg:w-auto flex-wrap lg:flex-nowrap items-center gap-2 lg:justify-end">
             <ThemeToggle className="hidden lg:inline-flex" />
 
             {user?.role !== 'ADMIN' && (
@@ -70,13 +70,13 @@ export default function Navbar() {
                 ) : (
                   <>
                     <Link to="/orders" className="nav-link-item" onClick={close}>My Orders</Link>
-                    <Link to="/profile" className="flex items-center gap-2 no-underline" onClick={close}>
+                    <Link to="/profile" className="flex items-center gap-2 no-underline min-w-0" onClick={close}>
                       <div className="w-8 h-8 rounded-full bg-[#ff6b35] flex items-center justify-center text-white ">
                         <span className="text-white font-bold" style={{ fontSize: 13 }}>
                           {user.fullName?.[0]}
                         </span>
                       </div>
-                      <span className="font-semibold text-gray-800 text-sm">{user.fullName?.split(' ')[0]}</span>
+                      <span className="font-semibold text-gray-800 text-sm truncate max-w-[120px]">{user.fullName?.split(' ')[0]}</span>
                     </Link>
                   </>
                 )}

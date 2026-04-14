@@ -58,8 +58,16 @@
 
 /* ─── Base ─────────────────────────────────────── */
 @layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
   html, body, #root {
     min-height: 100%;
+  }
+
+  img, svg, video, canvas {
+    max-width: 100%;
   }
 
   body {
@@ -67,6 +75,7 @@
     background: var(--app-bg);
     color: var(--text-primary);
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
     transition: background-color 0.25s ease, color 0.25s ease;
   }
 
@@ -321,6 +330,19 @@
     border-color: var(--border-soft);
   }
 
+  .table-mobile-scroll {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .table-mobile-scroll table {
+    min-width: 640px;
+  }
+
+  .progress-wrap {
+    width: 100%;
+  }
+
   .theme-toggle-btn {
     @apply inline-flex items-center justify-center w-9 h-9 rounded-lg border-0 cursor-pointer;
     background: var(--surface-muted);
@@ -443,6 +465,45 @@
   .theme-dark .text-gray-400,
   [data-theme='dark'] .text-gray-400 {
     color: var(--text-muted) !important;
+  }
+
+  @media (max-width: 640px) {
+    .modal-overlay {
+      align-items: flex-end;
+      padding: 0;
+    }
+
+    .modal-box {
+      max-width: 100%;
+      border-radius: 18px 18px 0 0;
+      max-height: 88vh;
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .modal-footer {
+      flex-wrap: wrap;
+    }
+
+    .modal-footer > * {
+      flex: 1;
+      min-width: 130px;
+      justify-content: center;
+    }
+
+    .progress-wrap {
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .progress-wrap > div {
+      min-width: 620px;
+    }
   }
 }
 
